@@ -80,7 +80,6 @@ pids
 
 # Package manager
 .pnpm-lock.cjs
-pnpm-lock.yaml
 
 # Qoder AI assistant
 .qoder/
