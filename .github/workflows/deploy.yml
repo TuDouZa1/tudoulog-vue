@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "master" ]  # 当 master 分支有推送时触发
+    branches: [ "master" ]
 
 jobs:
   build-and-deploy:
@@ -11,20 +11,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9   # 指定 pnpm 版本
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'pnpm'   # 缓存 pnpm 的 store，加速安装
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile  # 相当于 npm ci，严格按照 pnpm-lock.yaml 安装
 
       - name: Build
-        run: npm run build
+        run: pnpm run build   # 构建命令
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist   # 构建输出的目录
-          publish_branch: gh-pages  # 部署到的分支
+          publish_dir: ./dist
+          publish_branch: gh-pages
