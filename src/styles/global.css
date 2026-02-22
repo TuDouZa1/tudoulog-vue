@@ -31,7 +31,7 @@
   :root {
     --white: oklch(15% 0 0); /* 深色背景 */
     --off-white: oklch(20% 0.01 0 / 0.8);
-    --light-gray: oklch(20% 0.02 0);
+    --light-gray: oklch(30% 0.02 0);
     --dark-gray: oklch(85% 0 0); /* 亮色文字 */
     --pink: oklch(75% 0.25 10); /* 保持鲜艳但稍亮 */
   }

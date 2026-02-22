@@ -52,7 +52,7 @@ const articleComponent = computed(() => {
 }
 
 .article-card {
-  background: var(--white);
+  background: #0D1117;
   border-radius: 12px;
   box-shadow: var(--shadow);
 }
@@ -80,6 +80,11 @@ const articleComponent = computed(() => {
   color: var(--mid-gray);
   font-size: 14px;
   font-weight: 700;
+}
+
+.markdown-body {
+  padding-top: 0.5rem;
+  background: transparent;
 }
 
 .tags {

@@ -270,7 +270,7 @@ const filteredArticles = computed(() => {
   border: none;
   outline: none;
   flex: 1;
-  background: #fff;
+  background: var(--white);
   border-radius: 8px;
   padding: 0.5rem 2rem 0.5rem 0.5rem;
   color: var(--dark-gray);
