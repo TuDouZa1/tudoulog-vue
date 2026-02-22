@@ -26,16 +26,18 @@ const articleComponent = computed(() => {
 
 <template>
   <div v-if="article" class="article-detail">
-    <img v-if="article.coverImage" :src="article.coverImage" alt="文章封面图"
-         class="article-cover" />
-    <div class="article-content">
-      <h1 class="article-title">{{ article.title }}</h1>
-      <time class="article-time">{{ article.date }}</time>
-      <div class="markdown-body">
-        <component :is="articleComponent" v-if="articleComponent" />
-      </div>
-      <div class="tags">
-        <span v-for="tag in article.tags" :key="tag" class="tag">{{ tag }}</span>
+    <div class="article-card">
+      <img v-if="article.coverImage" :src="article.coverImage" alt="文章封面图"
+           class="article-cover" />
+      <div class="article-content">
+        <h1 class="article-title">{{ article.title }}</h1>
+        <time class="article-time">{{ article.date }}</time>
+        <div class="markdown-body">
+          <component :is="articleComponent" v-if="articleComponent" />
+        </div>
+        <div class="tags">
+          <span v-for="tag in article.tags" :key="tag" class="tag">{{ tag }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -46,6 +48,10 @@ const articleComponent = computed(() => {
 
 <style>
 .article-detail {
+  padding: 0 1rem;
+}
+
+.article-card {
   background: var(--white);
   border-radius: 12px;
   box-shadow: var(--shadow);

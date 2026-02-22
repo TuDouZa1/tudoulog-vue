@@ -39,6 +39,8 @@
 
 * {
   box-sizing: border-box;
+  /* 全局移除所有元素的点击高亮 */
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {

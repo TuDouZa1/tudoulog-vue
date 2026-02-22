@@ -1,10 +1,14 @@
+<script lang="ts" setup>
+const baseUrl = import.meta.env.BASE_URL
+</script>
+
 <template>
   <div class="home">
     <section class="hero">
       <div class="hero-content">
         <h1>土豆仔</h1>
         <p>这是一个纯静态个人博客</p>
-        <img src="../assets/img/tudouzai.jpeg">
+        <img :src="`${baseUrl}img/tudouzai.jpeg`" alt="土豆仔" />
       </div>
     </section>
   </div>
@@ -41,5 +45,11 @@
   width: 400px;
   border-radius: 12px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+@media screen and (max-width: 600px) {
+  .hero img {
+    width: 300px;
+  }
 }
 </style>

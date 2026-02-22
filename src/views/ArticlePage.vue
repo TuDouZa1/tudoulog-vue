@@ -6,7 +6,6 @@ const searchQuery = ref('')
 
 const clearSearch = () => {
   searchQuery.value = ''
-  // 可选：清空后重新聚焦输入框
   nextTick(() => {
     document.getElementById('search-input')?.focus()
   })
@@ -36,7 +35,7 @@ const clearTags = () => {
 const filteredArticles = computed(() => {
   return articles.filter((a) => {
     const matchTags = selectedTags.value.length === 0 ||
-      a.tags?.some(tag => selectedTags.value.includes(tag))
+      (a.tags && selectedTags.value.every(tag => a.tags.includes(tag)))
 
     const query = searchQuery.value.trim().toLowerCase()
     const matchSearch = query === '' ||

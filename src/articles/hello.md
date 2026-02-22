@@ -20,7 +20,7 @@ class Hi {
 
 这是一个图片
 
-![test.png](../assets/img/test.png)
+![test.png](../../public/img/test.png)
 
 [这是一个链接](https://github.com/TuDouZa1/TuDouLog)
 
