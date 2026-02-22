@@ -4,6 +4,10 @@ on:
   push:
     branches: [ "master" ]
 
+# 允许 GITHUB_TOKEN 写入仓库内容
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

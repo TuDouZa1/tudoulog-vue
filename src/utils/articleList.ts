@@ -12,7 +12,7 @@ const modules = import.meta.glob('@/articles/*.md', { eager: true })
 export const articles =
   Object.entries(modules).map(([path, mod]) => {
     const id = path.split('/').pop()!.replace('.md', '')
-    const imgPath = '/TuDouLog/src/assets/img/'
+    const imgPath = '/tudoulog-vue/src/assets/img/'
     const article = mod as Article
     console.log('mod:', mod)
     return {
