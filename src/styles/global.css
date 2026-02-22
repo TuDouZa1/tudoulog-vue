@@ -1,0 +1,91 @@
+:root {
+  /* 中性色 - 亮度从 100% 到 20% */
+  --white: oklch(100% 0 0); /* 纯白背景 */
+  --off-white: oklch(98% 0.005 0 / 0.8); /* 极浅灰，用于卡片背景 */
+  --light-gray: oklch(90% 0.01 0); /* 浅灰，用于分割线 */
+  --mid-gray: oklch(70% 0.02 0); /* 中灰，用于次要文字 */
+  --dark-gray: oklch(25% 0.02 0); /* 深灰，用于正文 */
+
+  /* 强调色 - 高色度，三种色相，亮度统一在 65%~70% 之间保证鲜艳 */
+  --pink: oklch(70% 0.22 10); /* 粉红，类似 rgba(255,100,100) */
+  --teal: oklch(75% 0.18 170); /* 青绿，类似 rgba(100,255,200) */
+  --purple: oklch(65% 0.2 290); /* 紫，类似 rgba(200,100,255) */
+
+  /* 辅助强调色 - 降低色度或亮度，用于 hover 等状态 */
+  --pink-light: oklch(80% 0.15 10);
+  --teal-light: oklch(85% 0.12 170);
+  --purple-light: oklch(75% 0.15 290);
+
+  /* 阴影 */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --teal-shadow: 0 4px 10px var(--teal-light);
+
+  /* 边框 */
+  --border: 1px solid var(--light-gray);
+
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --white: oklch(15% 0 0); /* 深色背景 */
+    --off-white: oklch(20% 0.01 0 / 0.8);
+    --light-gray: oklch(20% 0.02 0);
+    --dark-gray: oklch(85% 0 0); /* 亮色文字 */
+    --pink: oklch(75% 0.25 10); /* 保持鲜艳但稍亮 */
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--white);
+  color: var(--dark-gray);
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  line-height: 1.7;
+  margin: 0;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 30%, var(--pink-light) 0%, transparent 40%),
+  radial-gradient(circle at 80% 70%, var(--teal-light) 0%, transparent 40%),
+  radial-gradient(circle at 40% 80%, var(--purple-light) 0%, transparent 40%);
+  animation: shiftColors 10s infinite alternate;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+@keyframes shiftColors {
+  0% {
+    filter: hue-rotate(0deg) opacity(0.5);
+  }
+  100% {
+    filter: hue-rotate(30deg) opacity(1);
+  }
+}
+
+a {
+  color: var(--teal);
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--teal-light);
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  color: var(--dark-gray);
+}

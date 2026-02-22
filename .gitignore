@@ -1,0 +1,91 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+dist-ssr
+coverage
+
+# Local environment files
+*.local
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.sublime-project
+*.sublime-workspace
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Linting and formatting cache
+.eslintcache
+.oxlintcache
+.prettier-cache
+
+# Build tools cache
+.vite
+.cache
+.nx
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Debug files
+*.debug
+*.stackdump
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Testing
+/cypress/videos/
+/cypress/screenshots/
+/__screenshots__/
+/__coverage__/
+/junit.xml
+
+# Package manager
+.pnpm-lock.cjs
+pnpm-lock.yaml
+
+# Qoder AI assistant
+.qoder/
+
+# Temporary files
+*.tmp
+*.temp
+*~
