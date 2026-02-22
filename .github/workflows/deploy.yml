@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]  # 当 main 分支有推送时触发
+    branches: [ "master" ]  # 当 master 分支有推送时触发
 
 jobs:
   build-and-deploy:
