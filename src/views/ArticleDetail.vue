@@ -5,27 +5,30 @@ import { type Article, articles } from '@/utils/articleList'
 
 import 'github-markdown-css'
 import 'prismjs/themes/prism-okaidia.css'
+import '@/styles/article-common.css'
 
 const route = useRoute()
 const articleId = route.params.id as string
-const article = computed(() => articles.find(a => a.id === articleId))
+const article = computed(() => articles.find(a => a.id === articleId)) as any
 
 // 动态设置标题
 onMounted(() => {
-  const articleData = article.value as Article
-  document.title = articleData.title + '-土豆博客'
+  if (article.value) {
+    const articleData = article.value as Article
+    document.title = articleData.title + '-土豆博客'
+  }
 })
 
 // 动态加载文章内容组件
 const articleComponent = computed(() => {
   const currentArticle = article.value
-  if (!currentArticle) return null
+  if (!currentArticle) return
   return defineAsyncComponent(() => import(`@/articles/${currentArticle.id}.md`))
 })
 </script>
 
 <template>
-  <div v-if="article" class="article-detail">
+  <div class="article-page">
     <div class="article-card">
       <img v-if="article.coverImage" :src="article.coverImage" alt="文章封面图"
            class="article-cover" />
@@ -41,18 +44,11 @@ const articleComponent = computed(() => {
       </div>
     </div>
   </div>
-  <div v-else>
-    <p>文章不存在</p>
-  </div>
 </template>
 
-<style>
-.article-detail {
-  padding: 0 1rem;
-}
-
+<style scoped>
 .article-card {
-  background: #0D1117;
+  background: var(--md-background);
   border-radius: 12px;
   box-shadow: var(--shadow);
 }
@@ -72,40 +68,8 @@ const articleComponent = computed(() => {
   width: 100%;
 }
 
-.article-title {
-  font-size: 36px;
-}
-
-.article-time {
-  color: var(--mid-gray);
-  font-size: 14px;
-  font-weight: 700;
-}
-
 .markdown-body {
-  padding-top: 0.5rem;
+  padding: 0.5rem 0;
   background: transparent;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.tag {
-  margin-top: 1rem;
-  background: var(--off-white);
-  border: 2px solid var(--light-gray);
-  border-radius: 8px;
-  color: var(--dark-gray);
-  font-size: 12px;
-  padding: 0.25rem 0.5rem;
-  font-weight: bold;
-  transition: var(--transition);
-}
-
-.tag:hover {
-  background: var(--light-gray);
 }
 </style>

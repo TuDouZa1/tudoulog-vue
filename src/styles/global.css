@@ -16,6 +16,9 @@
   --teal-light: oklch(85% 0.12 170);
   --purple-light: oklch(75% 0.15 290);
 
+  /* 文章详情页 */
+  --md-background: oklch(100% 0 0);
+
   /* 阴影 */
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -33,6 +36,7 @@
     --off-white: oklch(20% 0.01 0 / 0.8);
     --light-gray: oklch(30% 0.02 0);
     --dark-gray: oklch(85% 0 0); /* 亮色文字 */
+    --md-background: #0D1117;
     --pink: oklch(75% 0.25 10); /* 保持鲜艳但稍亮 */
   }
 }

@@ -1,0 +1,63 @@
+.article-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.article-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--dark-gray);
+  padding: 2rem;
+}
+
+.article-empty h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: var(--dark-gray);
+  text-align: center;
+}
+
+.article-title {
+  color: var(--dark-gray);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.article-time {
+  color: var(--mid-gray);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tag {
+  background: var(--off-white);
+  border: 2px solid var(--light-gray);
+  border-radius: 8px;
+  color: var(--dark-gray);
+  font-size: 12px;
+  padding: 0.25rem 0.5rem;
+  font-weight: bold;
+  transition: var(--transition);
+}
+
+.tag:hover, .tag-active {
+  background: var(--light-gray);
+}
+
+.tag-active:hover, .selected-tag:hover {
+  background: var(--mid-gray);
+  cursor: pointer;
+  color: var(--light-gray);
+}

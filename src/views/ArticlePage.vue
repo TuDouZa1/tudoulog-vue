@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { articles } from '@/utils/articleList'
 import { computed, nextTick, ref } from 'vue'
+import { articles } from '@/utils/articleList'
+
+import '@/styles/article-common.css'
 
 const searchQuery = ref('')
 
@@ -106,35 +108,11 @@ const filteredArticles = computed(() => {
 </template>
 
 <style scoped>
-.article-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 1rem;
-}
-
 .article-list {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 0.5rem;
-}
-
-.article-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--dark-gray);
-  padding: 2rem;
-}
-
-.article-empty h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  color: var(--dark-gray);
 }
 
 .article-card {
@@ -160,48 +138,9 @@ const filteredArticles = computed(() => {
   border-radius: 8px;
 }
 
-.article-title {
-  color: var(--dark-gray);
-  font-size: 28px;
-  font-weight: 700;
-}
-
 .article-excerpt {
   color: var(--dark-gray);
   font-size: 18px;
-}
-
-.article-time {
-  color: var(--mid-gray);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.tag {
-  background: var(--off-white);
-  border: 2px solid var(--light-gray);
-  border-radius: 8px;
-  color: var(--dark-gray);
-  font-size: 12px;
-  padding: 0.25rem 0.5rem;
-  font-weight: bold;
-  transition: var(--transition);
-}
-
-.tag:hover, .tag-active {
-  background: var(--light-gray);
-}
-
-.tag-active:hover, .selected-tag:hover {
-  background: var(--mid-gray);
-  cursor: pointer;
-  color: var(--light-gray);
 }
 
 .tag-bar {
@@ -247,7 +186,7 @@ const filteredArticles = computed(() => {
   transition: var(--transition);
 }
 
-.close-tag-bar:hover {
+.close-tag-bar:hover, .clear-btn:hover {
   color: var(--dark-gray);
 }
 
@@ -291,9 +230,5 @@ const filteredArticles = computed(() => {
   color: var(--mid-gray);
   padding: 0.2rem 0.5rem;
   transition: var(--transition);
-}
-
-.clear-btn:hover {
-  color: var(--dark-gray);
 }
 </style>

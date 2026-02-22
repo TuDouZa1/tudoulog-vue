@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { articles } from '@/utils/articleList.ts'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,13 +24,23 @@ const router = createRouter({
         {
           path: 'article/:id',
           name: 'ArticleDetail',
-          component: () => import('@/views/ArticleDetail.vue')
+          component: () => import('@/views/ArticleDetail.vue'),
+          beforeEnter: (to) => {
+            if (!articles.find(a => a.id === to.params.id)) {
+              return { name: 'NotFound' }
+            }
+          }
         },
         {
           path: 'about',
           name: 'AboutPage',
           component: () => import('@/views/AboutPage.vue'),
           meta: { title: '关于-土豆博客' }
+        },
+        {
+          path: '/:pathMatch(.*)*',
+          name: 'NotFound',
+          component: () => import('@/views/NotFoundPage.vue')
         }
       ]
     }
