@@ -182,7 +182,6 @@ const filteredArticles = computed(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding-top: 0.5rem;
 }
 
 .tag {

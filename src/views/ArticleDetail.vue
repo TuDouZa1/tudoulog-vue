@@ -80,11 +80,10 @@ const articleComponent = computed(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding-top: 0.5rem;
 }
 
 .tag {
-  margin-top: 2rem;
+  margin-top: 1rem;
   background: var(--off-white);
   border: 2px solid var(--light-gray);
   border-radius: 8px;
