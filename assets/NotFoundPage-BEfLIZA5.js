@@ -1,1 +1,0 @@
-import{_ as n,o as t,c as s,a as o}from"./index-Cuz8zmGD.js";const c={},a={class:"not-found"};function d(r,e){return t(),s("section",a,[...e[0]||(e[0]=[o("div",{class:"not-found-content"},[o("h1",null,"404 NotFound"),o("p",null,"空空如也")],-1)])])}const f=n(c,[["render",d],["__scopeId","data-v-9b51fe6f"]]);export{f as default};
