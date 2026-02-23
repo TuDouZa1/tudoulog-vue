@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { articles } from '@/utils/articleList'
 
 import '@/styles/article-common.css'
 
+// 搜索
 const searchQuery = ref('')
 
 const clearSearch = () => {
@@ -50,10 +51,81 @@ const filteredArticles = computed(() => {
     return matchTags && matchSearch
   })
 })
+
+// 分页
+const currentPage = ref(1)
+// 一页最多显示几个
+const pageSize = ref(5)
+// 总共几页
+const totalPages = computed(() => Math.ceil(filteredArticles.value.length / pageSize.value))
+// 当前页显示的文章
+const showArticles = computed(() => {
+  const startArticle = (currentPage.value - 1) * pageSize.value
+  const endArticle = startArticle + pageSize.value
+  return filteredArticles.value.slice(startArticle, endArticle)
+})
+// 当筛选或搜索导致过滤的文章列表变化时，重置当前页为第一页
+watch(filteredArticles, () => (currentPage.value = 1))
+// 页面输入跳转
+const inputPageNum = ref('')
+const changePage = () => {
+  const pageNum = Number(inputPageNum.value)
+  if (!isNaN(pageNum) && pageNum > 0 && pageNum <= totalPages.value) {
+    currentPage.value = pageNum
+  }
+  inputPageNum.value = ''
+}
+// 分页按钮显示逻辑
+const showPageBtn = computed<number[]>(() => {
+  const total = totalPages.value
+  const current = currentPage.value
+  const range = [] // 符合条件的页码
+  // // 包括省略号在内最多8个元素：1，最后一页，index，index+1，index-1，两个省略号，输入框
+  // for (let index = 1; index <= total; index++) {
+  //   if (
+  //     index === 1 ||
+  //     index === total ||
+  //     // index和index左右两边的数字
+  //     (index - current < 2 && index + 1 >= current) ||
+  //     // 最后几位页码特殊处理
+  //     (total - current < 4 && total - index < 2)
+  //   ) {
+  //     range.push(index)
+  //   }
+  // }
+  // const result: (number | string)[] = [] // 结果
+  // let pre = 0
+  // for (const i of range) {
+  //   // 判断省略号位置
+  //   if (i - pre > 1) {
+  //     result.push('...')
+  //   }
+  //   result.push(i)
+  //   pre = i
+  // }
+  // console.log('result:', result)
+  // return result
+
+  // 再次精简
+  // 为了不让页码按钮过多，包括省略号在内最多4个元素：1，最后一页，index，输入框
+  for (let index = 1; index <= total; index++) {
+    if (index === 1 || index === total || index === current) {
+      range.push(index)
+    }
+  }
+  return range
+})
+// 切换页码后页面回到最顶端
+watch(currentPage, () => {
+  nextTick(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }) // 平滑滚动
+  })
+})
 </script>
 
 <template>
   <div class="article-page">
+    <!--  搜索  -->
     <div class="search">
       <input
         id="search-input"
@@ -66,6 +138,7 @@ const filteredArticles = computed(() => {
         ✕
       </button>
     </div>
+    <!--  标签筛选  -->
     <div v-if="selectedTags.length > 0" class="tag-bar">
       <div class="selected-tag-container">
         <span v-for="tag in selectedTags" :key="tag">
@@ -77,15 +150,17 @@ const filteredArticles = computed(() => {
       <button aria-label="清除筛选" class="close-tag-bar" @click="clearTags">✕</button>
     </div>
 
+    <!--  文章列表  -->
     <transition-group
-      v-if="filteredArticles.length > 0"
+      v-if="showArticles.length > 0"
+      :key="currentPage"
       appear
       class="article-list"
       name="list"
       tag="div"
     >
       <router-link
-        v-for="(article, index) in filteredArticles"
+        v-for="(article, index) in showArticles"
         :key="article.id"
         :style="{ '--delay': index * 0.1 + 's' }"
         :to="`/article/${article.id}`"
@@ -116,6 +191,42 @@ const filteredArticles = computed(() => {
     <div v-else class="article-empty">
       <h1>暂无文章</h1>
     </div>
+    <!--  分页  -->
+    <div v-if="filteredArticles.length > 0 && totalPages > 1" class="page">
+      <button
+        :class="currentPage === 1 ? 'page-btn-disabled' : 'page-btn'"
+        :disabled="currentPage === 1"
+        @click="currentPage--"
+      >
+        上一页
+      </button>
+      <button
+        v-for="(item, index) in showPageBtn"
+        :key="index"
+        :class="item === currentPage ? 'page-btn-active' : 'page-btn'"
+        class="page-btn"
+        @click="currentPage = item"
+      >
+        {{ item }}
+      </button>
+      <button
+        :class="currentPage === totalPages ? 'page-btn-disabled' : 'page-btn'"
+        :disabled="currentPage === totalPages"
+        @click="currentPage++"
+      >
+        下一页
+      </button>
+      <!--   页面输入回车跳转   -->
+      <input
+        v-if="totalPages > 3"
+        v-model="inputPageNum"
+        class="page-input"
+        inputmode="numeric"
+        placeholder="Go"
+        type="text"
+        @keyup.enter="changePage"
+      />
+    </div>
   </div>
 </template>
 
@@ -136,7 +247,7 @@ const filteredArticles = computed(() => {
   box-shadow: var(--shadow);
   border: 1px solid var(--light-gray);
   overflow: hidden;
-  transition: var(--transition);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .article-card:hover,
@@ -187,10 +298,16 @@ const filteredArticles = computed(() => {
   border: 2px solid var(--light-gray);
   border-radius: 8px;
   color: var(--dark-gray);
-  font-size: 14px;
+  font-size: 12px;
   padding: 0.25rem 0.5rem;
   font-weight: bold;
   transition: var(--transition);
+}
+
+.selected-tag:hover {
+  background: var(--mid-gray);
+  cursor: pointer;
+  color: var(--light-gray);
 }
 
 .close-tag-bar {
@@ -249,5 +366,53 @@ const filteredArticles = computed(() => {
   color: var(--mid-gray);
   padding: 0.2rem 0.5rem;
   transition: var(--transition);
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 12px;
+  background-color: var(--off-white);
+  box-shadow: var(--shadow);
+  gap: 0.5rem;
+}
+
+.page-btn,
+.page-btn-disabled,
+.page-btn-active,
+.page-input {
+  height: 36px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: var(--dark-gray);
+  background: var(--white);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.page-btn-disabled {
+  opacity: 0.5;
+}
+
+.page-btn-active,
+.page-btn:hover {
+  background: var(--teal);
+  box-shadow: var(--teal-shadow);
+  color: #fff;
+}
+
+.page-btn:hover {
+  cursor: pointer;
+}
+
+.page-input {
+  outline: none;
+  padding: 0.5rem;
+  width: 40px;
+  text-align: center;
 }
 </style>

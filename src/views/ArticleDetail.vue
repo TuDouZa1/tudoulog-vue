@@ -9,12 +9,12 @@ import '@/styles/article-common.css'
 
 const route = useRoute()
 const articleId = route.params.id as string
-const article = computed(() => articles.find((a) => a.id === articleId)) as any
+const article = computed(() => articles.find((a) => a.id === articleId))
 
 // 动态设置标题
 onMounted(() => {
   if (article.value) {
-    const articleData = article.value as Article
+    const articleData: Article = article.value
     document.title = articleData.title + '-土豆博客'
   }
 })
@@ -29,7 +29,7 @@ const articleComponent = computed(() => {
 
 <template>
   <div class="article-page">
-    <div class="article-card">
+    <div v-if="article" class="article-card">
       <img
         v-if="article.coverImage"
         :src="article.coverImage"
@@ -65,7 +65,7 @@ const articleComponent = computed(() => {
 }
 
 .article-content {
-  padding: 0 1.5rem 1.5rem 1.5rem;
+  padding: 1.5rem;
 }
 
 .article-content img {

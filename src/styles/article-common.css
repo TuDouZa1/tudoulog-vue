@@ -56,7 +56,7 @@
   background: var(--light-gray);
 }
 
-.tag-active:hover, .selected-tag:hover {
+.tag-active:hover {
   background: var(--mid-gray);
   cursor: pointer;
   color: var(--light-gray);
