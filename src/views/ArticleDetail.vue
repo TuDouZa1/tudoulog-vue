@@ -9,7 +9,7 @@ import '@/styles/article-common.css'
 
 const route = useRoute()
 const articleId = route.params.id as string
-const article = computed(() => articles.find(a => a.id === articleId)) as any
+const article = computed(() => articles.find((a) => a.id === articleId)) as any
 
 // 动态设置标题
 onMounted(() => {
@@ -30,8 +30,12 @@ const articleComponent = computed(() => {
 <template>
   <div class="article-page">
     <div class="article-card">
-      <img v-if="article.coverImage" :src="article.coverImage" alt="文章封面图"
-           class="article-cover" />
+      <img
+        v-if="article.coverImage"
+        :src="article.coverImage"
+        alt="文章封面图"
+        class="article-cover"
+      />
       <div class="article-content">
         <h1 class="article-title">{{ article.title }}</h1>
         <time class="article-time">{{ article.date }}</time>

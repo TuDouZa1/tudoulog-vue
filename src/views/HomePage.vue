@@ -5,11 +5,11 @@ const baseUrl = import.meta.env.BASE_URL
 <template>
   <div class="home">
     <section class="hero">
-      <div class="hero-content">
-        <h1>土豆仔</h1>
-        <p>这是一个纯静态个人博客</p>
-        <img :src="`${baseUrl}img/tudouzai.jpeg`" alt="土豆仔" />
-      </div>
+      <transition-group appear class="hero-content" name="list" tag="div">
+        <h1 key="1">土豆仔</h1>
+        <p key="2">这是一个纯静态个人博客</p>
+        <img key="3" :src="`${baseUrl}img/tudouzai.jpeg`" alt="土豆仔" />
+      </transition-group>
     </section>
   </div>
 </template>
@@ -21,6 +21,18 @@ const baseUrl = import.meta.env.BASE_URL
   justify-content: center;
   text-align: center;
   color: var(--dark-gray);
+}
+
+.list-enter-active:nth-child(1) {
+  transition-delay: 0s;
+}
+
+.list-enter-active:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.list-enter-active:nth-child(3) {
+  transition-delay: 0.2s;
 }
 
 .hero-content {
@@ -44,7 +56,9 @@ const baseUrl = import.meta.env.BASE_URL
   margin-top: 1.5rem;
   width: 400px;
   border-radius: 12px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 @media screen and (max-width: 600px) {

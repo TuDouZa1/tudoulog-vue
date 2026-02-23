@@ -3,8 +3,13 @@
 </script>
 
 <template>
-  <div class="about-page">
-    <div class="about-card">
+  <transition-group
+    appear
+    class="about-page"
+    name="list"
+    tag="div"
+  >
+    <div key="1" class="about-card">
       <span class="about-title">关于土豆博客</span>
       <div class="about-description">
         项目介绍：一个Vue纯静态个人博客项目
@@ -24,7 +29,7 @@
       </div>
     </div>
 
-    <div class="about-card">
+    <div key="2" class="about-card">
       <span class="about-title">一些软件</span>
       <div class="about-description">
         记录一些好用的软件列表
@@ -73,13 +78,13 @@
       </div>
     </div>
 
-    <div class="about-card">
+    <div key="3" class="about-card">
       <span class="about-title">一些废话</span>
       <div class="about-description">
         还没写
       </div>
     </div>
-  </div>
+  </transition-group>
 </template>
 
 <style scoped>
@@ -89,6 +94,18 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+}
+
+.list-enter-active:nth-child(1) {
+  transition-delay: 0s;
+}
+
+.list-enter-active:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.list-enter-active:nth-child(3) {
+  transition-delay: 0.2s;
 }
 
 .about-card {

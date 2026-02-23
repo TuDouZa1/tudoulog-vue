@@ -13,7 +13,11 @@ const isHome = computed(() => route.path === '/')
   <div class="layout">
     <AppHeader></AppHeader>
     <main class="main-content">
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+        <transition appear mode="out-in" name="page">
+          <component :is="Component" :key="$route.fullPath" />
+        </transition>
+      </router-view>
     </main>
     <AppFooter v-if="!isHome"></AppFooter>
   </div>

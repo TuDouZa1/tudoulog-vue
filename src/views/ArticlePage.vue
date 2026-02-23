@@ -36,14 +36,16 @@ const clearTags = () => {
 // 筛选文章列表
 const filteredArticles = computed(() => {
   return articles.filter((a) => {
-    const matchTags = selectedTags.value.length === 0 ||
-      (a.tags && selectedTags.value.every(tag => a.tags.includes(tag)))
+    const matchTags =
+      selectedTags.value.length === 0 ||
+      (a.tags && selectedTags.value.every((tag) => a.tags.includes(tag)))
 
     const query = searchQuery.value.trim().toLowerCase()
-    const matchSearch = query === '' ||
+    const matchSearch =
+      query === '' ||
       a.title.toLowerCase().includes(query) ||
       a.excerpt?.toLowerCase().includes(query) ||
-      a.tags?.some(tag => tag.toLowerCase().includes(query))
+      a.tags?.some((tag) => tag.toLowerCase().includes(query))
 
     return matchTags && matchSearch
   })
@@ -60,47 +62,57 @@ const filteredArticles = computed(() => {
         placeholder="搜索文章..."
         type="text"
       />
-      <button
-        v-if="searchQuery"
-        aria-label="清空搜索"
-        class="clear-btn"
-        @click="clearSearch"
-      >
+      <button v-if="searchQuery" aria-label="清空搜索" class="clear-btn" @click="clearSearch">
         ✕
       </button>
     </div>
     <div v-if="selectedTags.length > 0" class="tag-bar">
       <div class="selected-tag-container">
-      <span v-for="tag in selectedTags" :key="tag">
-        <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
-        {{ tag }}
-        </button>
-      </span>
+        <span v-for="tag in selectedTags" :key="tag">
+          <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
+            {{ tag }}
+          </button>
+        </span>
       </div>
-      <button aria-label="清除筛选" class="close-tag-bar"
-              @click="clearTags">✕
-      </button>
+      <button aria-label="清除筛选" class="close-tag-bar" @click="clearTags">✕</button>
     </div>
 
-    <div v-if="filteredArticles.length > 0" class="article-list">
-      <router-link v-for="article in filteredArticles" :key="article.id"
-                   :to="`/article/${article.id}`" class="article-card">
-        <img :src="article.coverImage" alt="文章封面图" class="article-cover" />
+    <transition-group
+      v-if="filteredArticles.length > 0"
+      appear
+      class="article-list"
+      name="list"
+      tag="div"
+    >
+      <router-link
+        v-for="(article, index) in filteredArticles"
+        :key="article.id"
+        :style="{ '--delay': index * 0.1 + 's' }"
+        :to="`/article/${article.id}`"
+        class="article-card"
+      >
+        <img
+          v-if="article.coverImage"
+          :src="article.coverImage"
+          alt="文章封面图"
+          class="article-cover"
+        />
         <div class="article-title">{{ article.title }}</div>
         <div class="article-excerpt">{{ article.excerpt }}</div>
         <time class="article-time">{{ article.date }}</time>
         <div class="tags">
-          <span v-for="tag in article.tags"
-                :key="tag"
-                :class="{'tag-active': selectedTags.includes(tag)}"
-                class="tag"
-                @click.stop.prevent="toggleTag(tag)"
+          <span
+            v-for="tag in article.tags"
+            :key="tag"
+            :class="{ 'tag-active': selectedTags.includes(tag) }"
+            class="tag"
+            @click.stop.prevent="toggleTag(tag)"
           >
             {{ tag }}
           </span>
         </div>
       </router-link>
-    </div>
+    </transition-group>
     <div v-else class="article-empty">
       <h1>暂无文章</h1>
     </div>
@@ -127,8 +139,14 @@ const filteredArticles = computed(() => {
   transition: var(--transition);
 }
 
-.article-card:hover, .tag-bar:hover, .search:hover {
+.article-card:hover,
+.tag-bar:hover,
+.search:hover {
   box-shadow: var(--hover-shadow);
+}
+
+.article-card.list-enter-active {
+  transition: all 0.3s ease var(--delay, 0s);
 }
 
 .article-cover {
@@ -186,7 +204,8 @@ const filteredArticles = computed(() => {
   transition: var(--transition);
 }
 
-.close-tag-bar:hover, .clear-btn:hover {
+.close-tag-bar:hover,
+.clear-btn:hover {
   color: var(--dark-gray);
 }
 
