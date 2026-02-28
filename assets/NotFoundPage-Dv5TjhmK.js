@@ -1,1 +1,0 @@
-import{_ as n,o as t,c as s,a as o}from"./index-DJ3hZVA_.js";const c={},a={class:"not-found"};function d(r,e){return t(),s("section",a,[...e[0]||(e[0]=[o("div",{class:"not-found-content"},[o("h1",null,"404 NotFound"),o("p",null,"空空如也")],-1)])])}const l=n(c,[["render",d],["__scopeId","data-v-c423e281"]]);export{l as default};
