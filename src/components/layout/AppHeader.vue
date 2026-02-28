@@ -66,7 +66,7 @@
 .nav-item-active {
   background: var(--teal) !important;
   color: #fff !important;
-  box-shadow: var(--teal-shadow);
+  box-shadow: var(--shadow-teal);
   font-weight: bold;
 }
 </style>

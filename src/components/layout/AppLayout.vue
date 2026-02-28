@@ -29,12 +29,10 @@ const isHome = computed(() => route.path === '/')
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  width: 100%;
 }
 
 .main-content {
-  width: 100%;
-  max-width: 700px;
+  max-width: 100%;
   flex: 1;
 }
 </style>

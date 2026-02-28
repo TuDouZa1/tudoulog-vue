@@ -20,9 +20,16 @@
   --md-background: oklch(100% 0 0);
 
   /* 阴影 */
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  --teal-shadow: 0 4px 10px var(--teal-light);
+  --shadow: 0 4px 8px rgba(0, 0, 0, 0.04),
+  0 2px 4px rgba(0, 0, 0, 0.06),
+  0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.08),
+  0 6px 12px rgba(0, 0, 0, 0.1),
+  0 3px 6px rgba(0, 0, 0, 0.05);
+  --shadow-teal: 0 8px 16px oklch(from var(--teal) l c h / 0.25),
+  0 4px 8px oklch(from var(--teal) l c h / 0.2),
+  0 2px 4px oklch(from var(--teal) l c h / 0.3);
 
   /* 边框 */
   --border: 1px solid var(--light-gray);
@@ -49,6 +56,13 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* 聚焦元素焦点轮廓样式 */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -56,7 +70,7 @@ html {
 body {
   background: var(--white);
   color: var(--dark-gray);
-  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  font-family: "Inter", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   line-height: 1.7;
   margin: 0;
   position: relative;
@@ -69,7 +83,8 @@ body::before {
   background: radial-gradient(circle at 20% 30%, var(--pink-light) 0%, transparent 40%),
   radial-gradient(circle at 80% 70%, var(--teal-light) 0%, transparent 40%),
   radial-gradient(circle at 40% 80%, var(--purple-light) 0%, transparent 40%);
-  animation: shiftColors 10s infinite alternate;
+  animation: shiftColors 10s infinite alternate ease-in-out;
+  will-change: filter, opacity;
   pointer-events: none;
   opacity: 0.6;
   z-index: -1;

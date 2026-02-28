@@ -232,15 +232,24 @@ watch(currentPage, () => {
 
 <style scoped>
 .article-list {
-  display: flex;
-  flex-direction: column;
+  //display: flex;
+  //flex-direction: column;
+  //gap: 0.5rem;
+  column-count: 1;
+  column-gap: 0.5rem;
   width: 100%;
-  gap: 0.5rem;
+}
+@media (min-width: 576px) {
+  .article-list {
+    column-count: 2;
+  }
 }
 
 .article-card {
+  break-inside: avoid;
+  display: block;
+  margin-bottom: 0.5rem;
   text-decoration: none;
-  width: 100%;
   padding: 1rem;
   border-radius: 12px;
   background-color: var(--off-white);
@@ -253,11 +262,17 @@ watch(currentPage, () => {
 .article-card:hover,
 .tag-bar:hover,
 .search:hover {
-  box-shadow: var(--hover-shadow);
+  box-shadow: var(--shadow-hover);
 }
 
 .article-card.list-enter-active {
   transition: all 0.3s ease var(--delay, 0s);
+}
+
+.article-title {
+  color: var(--dark-gray);
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .article-cover {
@@ -270,6 +285,10 @@ watch(currentPage, () => {
 .article-excerpt {
   color: var(--dark-gray);
   font-size: 18px;
+}
+
+.tags {
+  margin-top: 0.25rem;
 }
 
 .tag-bar {
@@ -401,7 +420,7 @@ watch(currentPage, () => {
 .page-btn-active,
 .page-btn:hover {
   background: var(--teal);
-  box-shadow: var(--teal-shadow);
+  box-shadow: var(--shadow-teal);
   color: #fff;
 }
 

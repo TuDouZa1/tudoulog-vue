@@ -2,15 +2,7 @@ import type { Component } from 'vue'
 
 const baseUrl = import.meta.env.BASE_URL
 
-export interface Article {
-  id: string // 文件名
-  title: string
-  date: string
-  tags?: string[]
-  excerpt?: string // 摘要
-  coverImage?: string // 封面图
-}
-
+// 定义对应插件生成类，包含default组件用来显示markdown正文内容
 interface MarkdownModule {
   default: Component
   title?: string
@@ -20,13 +12,16 @@ interface MarkdownModule {
   coverImage?: string
 }
 
+// 通过import.meta.glob一次性导入所有md文件
+// 每个导入的模块会包含所有frontmatter字段和默认导出的default组件
+// 使用 eager 会在构建时立即执行
 const modules: Record<string, MarkdownModule> = import.meta.glob('@/articles/*.md', { eager: true })
 
+// 生成文章数组
 export const articles = Object.entries(modules)
   .map(([path, mod]) => {
     const id = path.split('/').pop()!.replace('.md', '')
     const imgPath = baseUrl + 'img/'
-    console.log('mod:', mod)
     return {
       id,
       title: mod.title || id,

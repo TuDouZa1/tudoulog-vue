@@ -3,7 +3,9 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 0 1rem;
+  padding: 0 0.5rem;
+  max-width: 800px;
+  width: 100%;
 }
 
 .article-empty {
@@ -21,12 +23,6 @@
   font-weight: 700;
   color: var(--dark-gray);
   text-align: center;
-}
-
-.article-title {
-  color: var(--dark-gray);
-  font-size: 28px;
-  font-weight: 700;
 }
 
 .article-time {
@@ -50,6 +46,7 @@
   padding: 0.25rem 0.5rem;
   font-weight: bold;
   transition: var(--transition);
+  backdrop-filter: blur(20px);
 }
 
 .tag:hover, .tag-active {
@@ -61,3 +58,4 @@
   cursor: pointer;
   color: var(--light-gray);
 }
+

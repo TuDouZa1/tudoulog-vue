@@ -1,30 +1,32 @@
-<script lang="ts" setup>
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <transition-group
-    appear
-    class="about-page"
-    name="list"
-    tag="div"
-  >
+  <transition-group appear class="about-page" name="list" tag="div">
     <div key="1" class="about-card">
       <span class="about-title">关于土豆博客</span>
       <div class="about-description">
         项目介绍：一个Vue纯静态个人博客项目
-        <br>
+        <br />
         项目地址：
-        <a href="https://github.com/TuDouZa1/tudoulog-vue">
+        <a
+          href="https://github.com/TuDouZa1/tudoulog-vue"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           https://github.com/TuDouZa1/tudoulog-vue
         </a>
-        <br>
+        <br />
         GitHub：
-        <a href="https://github.com/TuDouZa1">https://github.com/TuDouZa1</a>
-        <br>
+        <a href="https://github.com/TuDouZa1" target="_blank" rel="noopener noreferrer">
+          https://github.com/TuDouZa1
+        </a>
+        <br />
         Gitee：
-        <a href="https://gitee.com/tudouza1">https://gitee.com/tudouza1</a>
-        <br>
+        <a href="https://gitee.com/tudouza1" target="_blank" rel="noopener noreferrer">
+          https://gitee.com/tudouza1
+        </a>
+        >
+        <br />
         QQ：1715593110
       </div>
     </div>
@@ -35,54 +37,57 @@
         记录一些好用的软件列表
         <h3>工具软件</h3>
         OBS Studio：录屏直播的开源软件，大家都在用
-        <br>
-        <a href="https://www.dogfight360.com/blog/18682/">SteamCommunity302</a>
-        ：访问被墙网站的工具
-        <br>
+        <br />
+        <a href="https://www.dogfight360.com/blog/18682/" target="_blank" rel="noopener noreferrer">
+          SteamCommunity302
+        </a>
+        ：不需要加速器，修改host访问Steam和被墙网站的工具
+        <br />
         傲梅分区助手：管理磁盘简单好用
-        <br>
+        <br />
         Motrix：下载工具，但是总感觉Electron框架的工具软件内存占用太大，很少用
-        <br>
+        <br />
         Everything：本地文件搜索索引神器，找文件速度很快，内存占用低
-        <br>
+        <br />
         WizTree：可视化磁盘占用分析，清理垃圾用
-        <br>
+        <br />
         PDFgear：PDF转各种格式
-        <br>
+        <br />
         图吧工具箱：工具合集
-        <br>
+        <br />
         HiBit Uninstall：卸载工具，能清理卸载残留文件注册表
-        <br>
-        <a href="https://www.lckp.top/thing/mpvnet_cm/">Mpv.Net</a>
+        <br />
+        <a href="https://www.lckp.top/thing/mpvnet_cm/" target="_blank" rel="noopener noreferrer">
+          Mpv.Net
+        </a>
         ：本地播放器，开箱即用，比PotPlayer省事
-        <br>
+        <br />
         PixPin：截图软件
-        <br>
+        <br />
         UU远程：开箱即用免费远程控制软件
         <h3>开发软件</h3>
-        Giant Log Viewer：看大型日志加载搜索速度快
-        <br>
+        <a href="https://glogg.bonnefon.org/" target="_blank" rel="noopener noreferrer"> glogg </a>
+        ：看大型日志加载搜索速度快
+        <br />
         Tiny RDM：可视化Redis管理工具
-        <br>
+        <br />
         Win SCP：Windows的远程服务器文件传输管理工具，上传下载很稳定
-        <br>
-        IShellPro：SSH终端，有一些终端工具，还算可以
-        <br>
+        <br />
+        IShellPro：专注于SSH的终端工具，多平台原生性能好
+        <br />
         IDEA：无需多言
-        <br>
+        <br />
         WebStorm：原本只是尝试用一下，感觉比VS Code好用
-        <br>
+        <br />
         VS Code：轻量级IDE，需要各种插件实现功能
-        <br>
+        <br />
         Sublime Text：高级记事本，编辑配置文件用，内存占用非常低
       </div>
     </div>
 
     <div key="3" class="about-card">
       <span class="about-title">一些废话</span>
-      <div class="about-description">
-        还没写
-      </div>
+      <div class="about-description">还没写</div>
     </div>
   </transition-group>
 </template>
@@ -120,7 +125,7 @@
 }
 
 .about-card:hover {
-  box-shadow: var(--hover-shadow);
+  box-shadow: var(--shadow-hover);
 }
 
 .about-card h3 {
@@ -130,12 +135,7 @@
 .about-title {
   color: transparent;
   -webkit-text-fill-color: transparent;
-  background: linear-gradient(
-    135deg,
-    var(--pink),
-    var(--teal),
-    var(--pink)
-  );
+  background: linear-gradient(135deg, var(--pink), var(--teal), var(--pink));
   background-size: 200% 100%;
   background-repeat: repeat;
   background-clip: text;
