@@ -6,10 +6,10 @@ import TocItem from '@/components/TocItem.vue'
 const props = defineProps<{ headings: Heading[] }>()
 
 const activeId = ref('')
-// 缓存标题的 offsetTop
+// 缓存标题的 offsetTop，也就是和最顶部元素的距离
 const headingOffsets = ref<{ id: string; top: number }[]>([])
 
-// 更新缓存（需要确保 DOM 已渲染）
+// 屏幕大小变化后，更新缓存（需要确保 DOM 已渲染）
 const updateOffsets = () => {
   const offsets: { id: string; top: number }[] = []
   props.headings.forEach((h) => {
@@ -22,9 +22,11 @@ const updateOffsets = () => {
   })
   // 按 top 值排序（确保顺序正确）
   offsets.sort((a, b) => a.top - b.top)
+  console.log('offsets', offsets)
   headingOffsets.value = offsets
 }
 
+// 页面滚动后计算激活的id值
 const handleScroll = () => {
   const scrollY = window.scrollY + 80 // 偏移量 80px，让高亮提前一点
   const offsets = headingOffsets.value

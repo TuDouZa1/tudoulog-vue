@@ -5,7 +5,6 @@ import { articles } from '@/utils/articleList'
 import type { Heading } from '@/types'
 
 import 'github-markdown-css'
-import 'prismjs/themes/prism-okaidia.css'
 import '@/styles/article-common.css'
 import TocComponent from '@/components/TocComponent.vue'
 import BackToTop from '@/components/BackToTop.vue'
@@ -109,6 +108,11 @@ onMounted(async () => {
 
 <style scoped>
 .article-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
   max-width: 1200px;
   width: 100%;
 }
@@ -189,8 +193,13 @@ onMounted(async () => {
 .article-title {
   color: #fff;
   font-size: 28px;
-  font-weight: 700;
+  font-weight: bold;
   margin: 0;
+}
+
+.article-time {
+  color: #fff;
+  font-size: 12px;
 }
 
 .article-content {

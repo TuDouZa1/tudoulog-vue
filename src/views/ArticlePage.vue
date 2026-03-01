@@ -284,7 +284,8 @@ watch(currentPage, () => {
 
 .article-excerpt {
   color: var(--dark-gray);
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .tags {

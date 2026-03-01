@@ -4,9 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Markdown from 'vite-plugin-vue-markdown'
-import prism from 'markdown-it-prism'
-
-
+import Shiki from 'markdown-it-shiki'
 
 export default defineConfig({
   base: '/tudoulog-vue/',
@@ -22,15 +20,23 @@ export default defineConfig({
         typographer: true,
       },
       markdownItUses: [
-        prism,
+        [Shiki, { theme: 'one-dark-pro' }],
         // 自定义链接渲染器，使外部链接在新标签页中打开
         /* eslint-disable @typescript-eslint/no-explicit-any */
         (md: any) => {
-          const defaultRender = md.renderer.rules.link_open || ((tokens: any, idx: any, options: any, env: any, self: any) => {
-            return self.renderToken(tokens, idx, options)
-          })
+          const defaultRender =
+            md.renderer.rules.link_open ||
+            ((tokens: any, idx: any, options: any, env: any, self: any) => {
+              return self.renderToken(tokens, idx, options)
+            })
 
-          md.renderer.rules.link_open = (tokens: any, idx: any, options: any, env: any, self: any) => {
+          md.renderer.rules.link_open = (
+            tokens: any,
+            idx: any,
+            options: any,
+            env: any,
+            self: any,
+          ) => {
             const hrefIndex = tokens[idx].attrIndex('href')
             if (hrefIndex >= 0) {
               const href = tokens[idx].attrs[hrefIndex][1]
@@ -43,7 +49,7 @@ export default defineConfig({
             }
             return defaultRender(tokens, idx, options, env, self)
           }
-        }
+        },
         /* eslint-enable @typescript-eslint/no-explicit-any */
       ],
       frontmatter: true,

@@ -1,8 +1,8 @@
 ---
 title: '记录写土豆博客学到的东西'
-date: '2026-02-25'
+date: '2026-03-01'
 tags: [ '编程', 'Vue', '前端' ]
-excerpt: ''
+excerpt: '记录写博客项目时学到的东西，包括markdown转vue组件，文章目录导航组件，组件过渡动画等等'
 coverImage: 'jilu-tudoulog.jpg'
 ---
 
@@ -17,7 +17,7 @@ pnpm add vite-plugin-vue-markdown -D
 ```
 
 ```bash
-pnpm add markdown-it-prism prismjs
+pnpm install markdown-it-shiki shiki
 ```
 
 #### 1.2 配置插件
@@ -26,25 +26,57 @@ pnpm add markdown-it-prism prismjs
 
 ```ts
 import Markdown from 'vite-plugin-vue-markdown'
-import prism from 'markdown-it-prism'
+import Shiki from 'markdown-it-shiki'
 
 export default defineConfig({
   base: '/tudoulog-vue/',
   plugins: [
     vue({
-      include: [/\.vue$/, /\.md$/] // 让 Vue 处理 .md 文件
+      include: [/\.vue$/, /\.md$/], // 让 Vue 处理 .md 文件
     }),
     vueDevTools(),
     Markdown({
       markdownItOptions: {
         html: true,
         linkify: true,
-        typographer: true
+        typographer: true,
       },
-      markdownItUses: [prism],
-      frontmatter: true, // 解析 frontmatter
-      exposeFrontmatter: true // 将 frontmatter 作为具名导出
-    })
+      markdownItUses: [
+        [Shiki, { theme: 'one-dark-pro' }],
+        // 自定义链接渲染器，使外部链接在新标签页中打开
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        (md: any) => {
+          const defaultRender =
+            md.renderer.rules.link_open ||
+            ((tokens: any, idx: any, options: any, env: any, self: any) => {
+              return self.renderToken(tokens, idx, options)
+            })
+
+          md.renderer.rules.link_open = (
+            tokens: any,
+            idx: any,
+            options: any,
+            env: any,
+            self: any,
+          ) => {
+            const hrefIndex = tokens[idx].attrIndex('href')
+            if (hrefIndex >= 0) {
+              const href = tokens[idx].attrs[hrefIndex][1]
+              // 判断是否为外部链接（以 http:// 或 https:// 开头）
+              if (/^https?:\/\//.test(href)) {
+                // 添加 target="_blank" 和 rel="noopener noreferrer"
+                tokens[idx].attrSet('target', '_blank')
+                tokens[idx].attrSet('rel', 'noopener noreferrer')
+              }
+            }
+            return defaultRender(tokens, idx, options, env, self)
+          }
+        },
+        /* eslint-enable @typescript-eslint/no-explicit-any */
+      ],
+      frontmatter: true,
+      exportFrontmatter: true,
+    }),
   ],
   resolve: {
     alias: {
@@ -54,11 +86,10 @@ export default defineConfig({
 })
 ```
 
-引入 Markdown 和 Prism 的 CSS 主题：
+引入 `markdown-it` 的 CSS 主题：
 
 ```ts
 import 'github-markdown-css'
-import 'prismjs/themes/prism-okaidia.css'
 ```
 
 ### 2. 新建md文档并配置ts动态读取
@@ -84,7 +115,7 @@ excerpt: 这是我的第一篇用 Markdown 写的文章。
 
 #### 2.2 articleList.ts
 
-通过`import`导入的md文件 ，插件会处理`frontmatter`属性并生成一个默认导出的vue组件`default`<br>
+通过`import`导入的md文件 ，插件会处理`frontmatter`属性并生成一个默认导出的vue组件`default`  
 同时`vite-plugin-vue-markdown`支持`frontmatter`分离，可以实现只获取md的meta元数据，按需加载组件
 
 ```ts
@@ -190,7 +221,7 @@ const article = computed(() => articles.find((a) => a.id === articleId))
 
 ### 3. 示例
 
-```vue
+```html
 
 <router-view v-slot="{ Component }">
   <transition appear mode="out-in" name="page">
@@ -225,3 +256,288 @@ const article = computed(() => articles.find((a) => a.id === articleId))
 它会复用 enter 相关的类名，也可单独指定 `appear-class` / `appear-active-class` / `appear-to-class`
 
 ## 如何实现页面目录导航
+
+### 1. 定义目录类
+
+```ts
+export interface Heading {
+  id: string
+  title: string
+  level: number
+  children?: Heading[]
+}
+```
+
+### 2. 修改文章详情页
+
+给文章正文内容用`ref="contentRef"`包裹，用于获取内部标题标签  
+收集文章正文的标题标签并处理到集合中用来目录显示使用  
+约定`h2`是每一节的标题`h3`是分段标题，也可以自己修改
+
+```ts
+import { computed, nextTick, onMounted, ref } from 'vue'
+import type { Heading } from '@/types'
+import TocComponent from '@/components/TocComponent.vue'
+
+// 文章内容
+const contentRef = ref<HTMLElement | null>(null)
+const headings = ref<Heading[]>([])
+
+// 简单的字符串格式化去掉特殊字符
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, '-') // 空格替换为'-'
+    .replace(/[^\w\u4e00-\u9fa5-]/g, '') // 保留中文，字母，数字，连字符
+}
+
+onMounted(async () => {
+  // 等待 DOM 更新，确保文章已渲染完毕
+  await nextTick()
+
+  if (!contentRef.value) return
+
+  // 获取所有h2 h3标签
+  const elements = contentRef.value.querySelectorAll('h2, h3')
+  // 标题数组
+  const items: Heading[] = []
+
+  // 遍历所有h2 h3标签，设置id，title，level属性放入items中
+  elements.forEach((element) => {
+    const level = element.tagName === 'H2' ? 2 : 3
+
+    // 设置id方便后续根据id页面跳转
+    let id = element.id
+    if (!id) {
+      id = slugify(element.textContent || 'heading')
+      element.id = id
+    }
+    items.push({
+      id,
+      title: element.textContent || '',
+      level,
+    })
+  })
+
+  // 设置不同标题的继承关系
+  // h3是最近的h2的子集
+  const tree: Heading[] = []
+  // 最近的h2
+  let lastH2: Heading | null = null
+
+  items.forEach((item) => {
+    if (item.level === 2) {
+      lastH2 = { ...item, children: [] }
+      tree.push(lastH2)
+    } else if (item.level === 3 && lastH2 !== null) {
+      lastH2.children!.push({ ...item, children: [] })
+    } else {
+      tree.push({ ...item, children: [] })
+    }
+  })
+  headings.value = tree
+})
+```
+
+### 3. TocItem.vue
+
+单个`h2`目录项组件
+
+```ts
+import type { Heading } from '@/types'
+
+// 获取目录树和当前激活的id值
+defineProps<{
+  heading: Heading
+  activeId: string
+}>()
+
+defineEmits<{
+  (e: 'click', id: string): void
+}>()
+```
+
+```html
+
+<li>
+  <!-- h2目录导航链接 -->
+  <a
+    :class="{ active: activeId === heading.id }"
+    :href="'#' + heading.id"
+    @click.prevent="$emit('click', heading.id)"
+  >
+    {{ heading.title }}
+  </a>
+  <!--  递归渲染h3子节点  -->
+  <ul v-if="heading.children && heading.children.length" class="toc-sublist">
+    <TocItem
+      v-for="h3 in heading.children"
+      :key="h3.id"
+      :active-id="activeId"
+      :heading="h3"
+      @click="$emit('click', h3.id)"
+    >
+    </TocItem>
+  </ul>
+</li>
+```
+
+### 4. Toc.vue
+
+```ts
+import type { Heading } from '@/types'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import TocItem from '@/components/TocItem.vue'
+
+const props = defineProps<{ headings: Heading[] }>()
+
+const activeId = ref('')
+// 缓存标题的 offsetTop，也就是和最顶部元素的距离
+const headingOffsets = ref<{ id: string; top: number }[]>([])
+
+// 屏幕大小变化后，更新缓存（需要确保 DOM 已渲染）
+const updateOffsets = () => {
+  const offsets: { id: string; top: number }[] = []
+  props.headings.forEach((h) => {
+    const el = document.getElementById(h.id)
+    if (el) offsets.push({ id: h.id, top: el.offsetTop })
+    h.children?.forEach((child) => {
+      const childEl = document.getElementById(child.id)
+      if (childEl) offsets.push({ id: child.id, top: childEl.offsetTop })
+    })
+  })
+  // 按 top 值排序（确保顺序正确）
+  offsets.sort((a, b) => a.top - b.top)
+  console.log('offsets', offsets)
+  headingOffsets.value = offsets
+}
+
+// 页面滚动后计算激活的id值
+const handleScroll = () => {
+  const scrollY = window.scrollY + 80 // 偏移量 80px，让高亮提前一点
+  const offsets = headingOffsets.value
+  if (!offsets.length) return
+
+  // 从后往前找最后一个 top <= scrollY 的标题
+  let active = offsets[0]!.id
+  for (let i = offsets.length - 1; i >= 0; i--) {
+    if (offsets[i]!.top <= scrollY) {
+      active = offsets[i]!.id
+      break
+    }
+  }
+  activeId.value = active
+}
+
+// 监听滚动
+let scrollHandler: (() => void) | null = null
+
+onMounted(() => {
+  // 等待 DOM 更新后首次计算偏移量
+  nextTick(() => {
+    updateOffsets()
+    handleScroll() // 初始化高亮
+  })
+
+  scrollHandler = () => handleScroll()
+  window.addEventListener('scroll', scrollHandler, { passive: true })
+  window.addEventListener('resize', updateOffsets) // 窗口大小改变时重新计算
+})
+
+onUnmounted(() => {
+  if (scrollHandler) window.removeEventListener('scroll', scrollHandler)
+  window.removeEventListener('resize', updateOffsets)
+})
+
+// 如果 headings 发生变化（比如切换文章），重新计算
+watch(
+  () => props.headings,
+  () => {
+    nextTick(() => {
+      updateOffsets()
+      handleScroll()
+    })
+  },
+)
+
+// 定义点击处理函数
+const handleClick = (id: string) => {
+  const element = document.getElementById(id)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+    if (!isWideScreen.value) {
+      toggleToc()
+    }
+  }
+}
+```
+
+```html
+
+<aside v-if="headings.length" class="toc">
+  <div class="toc-title">目录导航</div>
+  <ul class="toc-list">
+    <TocItem
+      v-for="heading in headings"
+      :key="heading.id"
+      :active-id="activeId"
+      :heading="heading"
+      @click="handleClick"
+    />
+  </ul>
+</aside>
+```
+
+#### 扩展：实现窄屏宽屏下目录导航的响应式显示样式
+
+在宽屏下默认显示目录导航栏  
+在窄屏下显示目录按钮并默认隐藏目录导航栏，通过按钮点击切换显示
+
+```ts
+// 手动按钮切换状态（窄屏下有效）
+const isTocVisible = ref(false)
+// 当前是否为宽屏（>=1250px）
+const mediaQuery = window.matchMedia('(min-width: 1250px)')
+const isWideScreen = ref(mediaQuery.matches)
+
+// 监听屏幕宽度变化
+const handleMediaChange = (e: MediaQueryListEvent) => {
+  isWideScreen.value = e.matches
+}
+
+onMounted(() => {
+  mediaQuery.addEventListener('change', handleMediaChange)
+})
+onUnmounted(() => {
+  mediaQuery.removeEventListener('change', handleMediaChange)
+})
+
+// 最终显示状态：宽屏始终显示，窄屏由手动按钮切换
+const shouldShowToc = computed(() => {
+  return isWideScreen.value || isTocVisible.value
+})
+
+// 点击按钮切换
+const toggleToc = () => {
+  isTocVisible.value = !isTocVisible.value
+}
+```
+
+```html
+
+<div class="show-toc-btn" @click="toggleToc">{{ isTocVisible ? '收起' : '目录' }}</div>
+<transition name="fade">
+  <aside v-if="headings.length" v-show="shouldShowToc" class="toc">
+    <div class="toc-title">目录导航</div>
+    <ul class="toc-list">
+      <TocItem
+        v-for="heading in headings"
+        :key="heading.id"
+        :active-id="activeId"
+        :heading="heading"
+        @click="handleClick"
+      />
+    </ul>
+  </aside>
+</transition>
+```

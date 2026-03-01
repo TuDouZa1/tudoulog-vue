@@ -10,22 +10,21 @@
         项目地址：
         <a
           href="https://github.com/TuDouZa1/tudoulog-vue"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           https://github.com/TuDouZa1/tudoulog-vue
         </a>
         <br />
         GitHub：
-        <a href="https://github.com/TuDouZa1" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/TuDouZa1" rel="noopener noreferrer" target="_blank">
           https://github.com/TuDouZa1
         </a>
         <br />
         Gitee：
-        <a href="https://gitee.com/tudouza1" target="_blank" rel="noopener noreferrer">
+        <a href="https://gitee.com/tudouza1" rel="noopener noreferrer" target="_blank">
           https://gitee.com/tudouza1
         </a>
-        >
         <br />
         QQ：1715593110
       </div>
@@ -38,7 +37,7 @@
         <h3>工具软件</h3>
         OBS Studio：录屏直播的开源软件，大家都在用
         <br />
-        <a href="https://www.dogfight360.com/blog/18682/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.dogfight360.com/blog/18682/" rel="noopener noreferrer" target="_blank">
           SteamCommunity302
         </a>
         ：不需要加速器，修改host访问Steam和被墙网站的工具
@@ -57,7 +56,7 @@
         <br />
         HiBit Uninstall：卸载工具，能清理卸载残留文件注册表
         <br />
-        <a href="https://www.lckp.top/thing/mpvnet_cm/" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.lckp.top/thing/mpvnet_cm/" rel="noopener noreferrer" target="_blank">
           Mpv.Net
         </a>
         ：本地播放器，开箱即用，比PotPlayer省事
@@ -66,7 +65,7 @@
         <br />
         UU远程：开箱即用免费远程控制软件
         <h3>开发软件</h3>
-        <a href="https://glogg.bonnefon.org/" target="_blank" rel="noopener noreferrer"> glogg </a>
+        <a href="https://glogg.bonnefon.org/" rel="noopener noreferrer" target="_blank"> glogg </a>
         ：看大型日志加载搜索速度快
         <br />
         Tiny RDM：可视化Redis管理工具
@@ -83,11 +82,6 @@
         <br />
         Sublime Text：高级记事本，编辑配置文件用，内存占用非常低
       </div>
-    </div>
-
-    <div key="3" class="about-card">
-      <span class="about-title">一些废话</span>
-      <div class="about-description">还没写</div>
     </div>
   </transition-group>
 </template>
@@ -107,10 +101,6 @@
 
 .list-enter-active:nth-child(2) {
   transition-delay: 0.1s;
-}
-
-.list-enter-active:nth-child(3) {
-  transition-delay: 0.2s;
 }
 
 .about-card {

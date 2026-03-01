@@ -17,7 +17,8 @@
   "dependencies": {
     "github-markdown-css": "^5.9.0",
     "markdown-it-prism": "^3.0.1",
-    "prismjs": "^1.30.0",
+    "markdown-it-shiki": "^0.9.0",
+    "shiki": "^4.0.0",
     "vue": "^3.5.28",
     "vue-router": "^5.0.2"
   },
