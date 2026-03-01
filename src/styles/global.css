@@ -74,6 +74,7 @@ body {
   line-height: 1.7;
   margin: 0;
   position: relative;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -133,10 +134,15 @@ h1, h2, h3 {
 }
 
 .list-leave-active {
-  transition: var(--transition);
+  opacity: 0;
+  position: fixed;
 }
 
 .list-leave-to {
   opacity: 0;
   transform: translateY(30px) scale(0.95);
+}
+
+.list-move {
+  transition: var(--transition);
 }

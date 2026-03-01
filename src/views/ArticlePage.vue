@@ -143,18 +143,24 @@ watch(currentPage, () => {
       </button>
     </div>
     <!--  标签筛选  -->
-    <transition name="tag-bar-transition">
-      <div v-if="selectedTags.length > 0" class="tag-bar">
-        <div class="selected-tag-container">
-          <span v-for="tag in selectedTags" :key="tag">
-            <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
-              {{ tag }}
-            </button>
-          </span>
-        </div>
-        <button aria-label="清除筛选" class="close-tag-bar" @click="clearTags">✕</button>
+    <div class="tag-bar">
+      <div class="selected-tag-container">
+        <span class="tag-bar-info">{{ selectedTags.length > 0 ? '标签：' : '点击标签筛选' }}</span>
+        <span v-for="tag in selectedTags" :key="tag">
+          <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
+            {{ tag }}
+          </button>
+        </span>
       </div>
-    </transition>
+      <button
+        v-show="selectedTags.length > 0"
+        aria-label="清除筛选"
+        class="close-tag-bar"
+        @click="clearTags"
+      >
+        ✕
+      </button>
+    </div>
 
     <!--  文章列表  -->
     <transition-group
@@ -237,6 +243,7 @@ watch(currentPage, () => {
 
 .tag-bar {
   width: 100%;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -248,23 +255,24 @@ watch(currentPage, () => {
   border: 1px solid var(--light-gray);
   transition: var(--transition);
 }
-.tag-bar-transition-enter-active,
-.tag-bar-transition-leave-active {
-  transition: var(--transition);
-}
-.tag-bar-transition-enter-from,
-.tag-bar-transition-leave-to {
-  opacity: 0;
-  transform: translateX(-20%);
+
+.tag-bar-info {
+  padding-left: 0.5rem;
+  color: var(--mid-gray);
 }
 
 .selected-tag-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .selected-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 32px;
   background: var(--light-gray);
   border: 2px solid var(--light-gray);
