@@ -1,8 +1,12 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { articles } from '@/utils/articleList'
-
+import CardComponent from '@/components/CardComponent.vue'
+import TagComponent from '@/components/TagComponent.vue'
 import '@/styles/article-common.css'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 // 搜索
 const searchQuery = ref('')
@@ -16,14 +20,14 @@ const clearSearch = () => {
 
 // 标签筛选
 const selectedTags = ref<string[]>([])
-const toggleTag = (tag: string) => {
-  const index = selectedTags.value.indexOf(tag)
-  if (index === -1) {
-    selectedTags.value.push(tag)
-  } else {
-    selectedTags.value.splice(index, 1)
+onMounted(() => {
+  const tagsQuery = route.query.tags
+  if (tagsQuery) {
+    if (typeof tagsQuery === 'string') {
+      selectedTags.value = tagsQuery.split(',').filter((tag) => tag.trim().length > 0)
+    }
   }
-}
+})
 const removeTag = (tag: string) => {
   const index = selectedTags.value.indexOf(tag)
   if (index !== -1) {
@@ -139,21 +143,22 @@ watch(currentPage, () => {
       </button>
     </div>
     <!--  标签筛选  -->
-    <div v-if="selectedTags.length > 0" class="tag-bar">
-      <div class="selected-tag-container">
-        <span v-for="tag in selectedTags" :key="tag">
-          <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
-            {{ tag }}
-          </button>
-        </span>
+    <transition name="tag-bar-transition">
+      <div v-if="selectedTags.length > 0" class="tag-bar">
+        <div class="selected-tag-container">
+          <span v-for="tag in selectedTags" :key="tag">
+            <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
+              {{ tag }}
+            </button>
+          </span>
+        </div>
+        <button aria-label="清除筛选" class="close-tag-bar" @click="clearTags">✕</button>
       </div>
-      <button aria-label="清除筛选" class="close-tag-bar" @click="clearTags">✕</button>
-    </div>
+    </transition>
 
     <!--  文章列表  -->
     <transition-group
       v-if="showArticles.length > 0"
-      :key="currentPage"
       appear
       class="article-list"
       name="list"
@@ -164,28 +169,12 @@ watch(currentPage, () => {
         :key="article.id"
         :style="{ '--delay': index * 0.1 + 's' }"
         :to="`/article/${article.id}`"
-        class="article-card"
       >
-        <img
-          v-if="article.coverImage"
-          :src="article.coverImage"
-          alt="文章封面图"
-          class="article-cover"
-        />
-        <div class="article-title">{{ article.title }}</div>
-        <div class="article-excerpt">{{ article.excerpt }}</div>
-        <time class="article-time">{{ article.date }}</time>
-        <div class="tags">
-          <span
-            v-for="tag in article.tags"
-            :key="tag"
-            :class="{ 'tag-active': selectedTags.includes(tag) }"
-            class="tag"
-            @click.stop.prevent="toggleTag(tag)"
-          >
-            {{ tag }}
-          </span>
-        </div>
+        <CardComponent :card="article">
+          <template #tags>
+            <TagComponent v-model="selectedTags" :tags="article.tags || []" />
+          </template>
+        </CardComponent>
       </router-link>
     </transition-group>
     <div v-else class="article-empty">
@@ -232,9 +221,6 @@ watch(currentPage, () => {
 
 <style scoped>
 .article-list {
-  //display: flex;
-  //flex-direction: column;
-  //gap: 0.5rem;
   column-count: 1;
   column-gap: 0.5rem;
   width: 100%;
@@ -244,52 +230,9 @@ watch(currentPage, () => {
     column-count: 2;
   }
 }
-
-.article-card {
-  break-inside: avoid;
+.article-list a {
   display: block;
-  margin-bottom: 0.5rem;
   text-decoration: none;
-  padding: 1rem;
-  border-radius: 12px;
-  background-color: var(--off-white);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--light-gray);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease-in-out;
-}
-
-.article-card:hover,
-.tag-bar:hover,
-.search:hover {
-  box-shadow: var(--shadow-hover);
-}
-
-.article-card.list-enter-active {
-  transition: all 0.3s ease var(--delay, 0s);
-}
-
-.article-title {
-  color: var(--dark-gray);
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.article-cover {
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 8px;
-}
-
-.article-excerpt {
-  color: var(--dark-gray);
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.tags {
-  margin-top: 0.25rem;
 }
 
 .tag-bar {
@@ -305,10 +248,19 @@ watch(currentPage, () => {
   border: 1px solid var(--light-gray);
   transition: var(--transition);
 }
+.tag-bar-transition-enter-active,
+.tag-bar-transition-leave-active {
+  transition: var(--transition);
+}
+.tag-bar-transition-enter-from,
+.tag-bar-transition-leave-to {
+  opacity: 0;
+  transform: translateX(-20%);
+}
 
 .selected-tag-container {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 

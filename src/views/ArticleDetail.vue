@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { computed, nextTick, onMounted, ref } from 'vue'
 import { articles } from '@/utils/articleList'
 import type { Heading } from '@/types'
@@ -8,8 +8,17 @@ import 'github-markdown-css'
 import '@/styles/article-common.css'
 import TocComponent from '@/components/TocComponent.vue'
 import BackToTop from '@/components/BackToTop.vue'
+import TagComponent from '@/components/TagComponent.vue'
 
 const route = useRoute()
+const router = useRouter()
+const goToListWithTag = (tags: string) => {
+  router.push({
+    path: '/article',
+    query: { tags },
+  })
+}
+
 const articleId = route.params.id as string
 const article = computed(() => articles.find((a) => a.id === articleId))
 
@@ -86,9 +95,7 @@ onMounted(async () => {
       >
         <img :src="article.coverImage" alt="文章封面图" class="article-cover" />
         <div class="tags-position">
-          <div class="tags">
-            <span v-for="tag in article.tags" :key="tag" class="tag">{{ tag }}</span>
-          </div>
+          <TagComponent :tags="article.tags || []" mode="navigate" @click-tag="goToListWithTag" />
         </div>
         <div class="article-meta">
           <h1 class="article-title">{{ article.title }}</h1>
@@ -173,12 +180,9 @@ onMounted(async () => {
   position: absolute;
   top: 1rem;
   left: 1rem;
+  right: 1rem;
   width: 100%;
   z-index: 3;
-}
-
-.tag {
-  box-shadow: var(--shadow);
 }
 
 .article-meta {
@@ -199,7 +203,6 @@ onMounted(async () => {
 
 .article-time {
   color: #fff;
-  font-size: 12px;
 }
 
 .article-content {
