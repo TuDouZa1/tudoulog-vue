@@ -40,23 +40,33 @@ li {
 }
 a {
   display: block;
-  padding: 0.2rem 0.5rem;
+  padding: 0.375rem 0.5rem;
   color: var(--dark-gray);
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   text-decoration: none;
-  font-size: 0.9rem;
-  transition: var(--transition);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: var(--transition-fast);
+  border-left: 4px solid transparent;
 }
 a:hover {
-  background: var(--light-gray);
+  background: var(--off-white);
+  border-left-color: var(--light-gray);
 }
 a.active {
-  background: var(--teal);
-  color: white;
+  background: var(--main) !important;
+  color: #fff !important;
   font-weight: 500;
+  border-left-color: var(--main-light) !important;
 }
 .toc-sublist {
-  padding-left: 1rem;
+  padding-left: 0.75rem;
   list-style: none;
+  margin: 0;
+}
+
+.toc-sublist a {
+  font-size: 0.8125rem;
+  padding: 0.25rem 0.5rem;
 }
 </style>

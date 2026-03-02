@@ -116,44 +116,79 @@ const toggleToc = () => {
 </script>
 
 <template>
-  <div class="show-toc-btn" @click="toggleToc">{{ isTocVisible ? '收起' : '目录' }}</div>
-  <transition name="fade">
-    <aside v-if="headings.length" v-show="shouldShowToc" class="toc">
-      <div class="toc-title">目录导航</div>
-      <ul class="toc-list">
-        <TocItem
-          v-for="heading in headings"
-          :key="heading.id"
-          :active-id="activeId"
-          :heading="heading"
-          @click="handleClick"
-        />
-      </ul>
+  <button
+    v-if="headings.length"
+    :aria-expanded="isTocVisible"
+    aria-controls="toc-panel"
+    class="show-toc-btn"
+    type="button"
+    @click="toggleToc"
+  >
+    <span class="btn-text">{{ isTocVisible ? '收起' : '目录' }}</span>
+  </button>
+  <transition name="toc-slide">
+    <aside
+      v-if="headings.length"
+      v-show="shouldShowToc"
+      id="toc-panel"
+      aria-label="文章目录"
+      class="toc"
+    >
+      <div class="toc-header">
+        <h3 class="toc-title">目录导航</h3>
+      </div>
+      <nav class="toc-nav">
+        <ul class="toc-list">
+          <TocItem
+            v-for="heading in headings"
+            :key="heading.id"
+            :active-id="activeId"
+            :heading="heading"
+            @click="handleClick"
+          />
+        </ul>
+      </nav>
     </aside>
+  </transition>
+
+  <!-- 遮罩层（窄屏） -->
+  <transition name="toc-slide">
+    <div
+      v-if="!isWideScreen && isTocVisible"
+      class="toc-overlay"
+      @click="isTocVisible = !isTocVisible"
+    />
   </transition>
 </template>
 
 <style scoped>
 .show-toc-btn {
+  width: 48px;
   position: fixed;
   right: 20px;
   bottom: 0;
-  background: var(--teal);
+  background: var(--main);
   color: #fff;
   padding: 0.5rem;
   font-weight: bold;
-  border-radius: 12px 12px 0 0;
+  border: none;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: var(--transition);
   z-index: 20;
+  cursor: pointer;
 }
 .show-toc-btn:hover {
-  cursor: pointer;
-  background: var(--teal);
-  box-shadow: var(--shadow-teal);
+  background: var(--main);
+  box-shadow: var(--shadow-main);
 }
 .show-toc-btn:active {
   transform: translateY(10px);
+}
+@media (min-width: 1250px) {
+  .show-toc-btn {
+    display: none;
+  }
 }
 
 .toc {
@@ -168,11 +203,21 @@ const toggleToc = () => {
   z-index: 10;
 }
 
+.toc-header {
+  margin-bottom: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: var(--border);
+}
+
 .toc-title {
-  padding: 0 0.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: var(--teal);
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--main);
+}
+
+.toc-nav {
+  overflow-y: auto;
 }
 
 .toc-list {
@@ -181,10 +226,12 @@ const toggleToc = () => {
   margin: 0;
 }
 
-@media (min-width: 1250px) {
-  .show-toc-btn {
-    display: none;
-  }
+.toc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 5;
 }
 
 @media (width < 800px) {
@@ -199,14 +246,15 @@ const toggleToc = () => {
     box-shadow: var(--shadow-lg);
   }
 
-  .fade-enter-active,
-  .fade-leave-active {
+  /* 目录滑入动画 */
+  .toc-slide-enter-active,
+  .toc-slide-leave-active {
     transition: var(--transition);
   }
 
-  .fade-enter-from,
-  .fade-leave-to {
-    transform: translateY(100%);
+  .toc-slide-enter-from,
+  .toc-slide-leave-to {
+    transform: translateY(20%);
     opacity: 0;
   }
 }

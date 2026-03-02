@@ -4,6 +4,7 @@ import { articles } from '@/utils/articleList'
 import CardComponent from '@/components/CardComponent.vue'
 import TagComponent from '@/components/TagComponent.vue'
 import '@/styles/article-common.css'
+import '@/styles/tag-common.css'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -131,9 +132,21 @@ watch(currentPage, () => {
   <div class="article-page">
     <!--  搜索  -->
     <div class="search">
+      <svg
+        aria-hidden="true"
+        class="search-icon"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
       <input
         id="search-input"
         v-model="searchQuery"
+        aria-label="搜索文章"
         class="search-input"
         placeholder="搜索文章..."
         type="text"
@@ -145,20 +158,30 @@ watch(currentPage, () => {
     <!--  标签筛选  -->
     <div class="tag-bar">
       <div class="selected-tag-container">
-        <span class="tag-bar-info">{{ selectedTags.length > 0 ? '标签：' : '点击标签筛选' }}</span>
-        <span v-for="tag in selectedTags" :key="tag">
-          <button aria-label="移除标签" class="selected-tag" @click.stop="removeTag(tag)">
+        <span class="tag-bar-info">
+          {{ selectedTags.length > 0 ? '标签：' : '点击文章标签进行筛选' }}
+        </span>
+        <TransitionGroup class="selected-tags" name="tag" tag="span">
+          <button
+            v-for="tag in selectedTags"
+            :key="tag"
+            :aria-label="tag"
+            class="selected-tag"
+            type="button"
+            @click.stop="removeTag(tag)"
+          >
             {{ tag }}
           </button>
-        </span>
+        </TransitionGroup>
       </div>
       <button
         v-show="selectedTags.length > 0"
         aria-label="清除筛选"
-        class="close-tag-bar"
+        class="clear-all-btn"
+        type="button"
         @click="clearTags"
       >
-        ✕
+        清除全部
       </button>
     </div>
 
@@ -187,10 +210,12 @@ watch(currentPage, () => {
       <h1>暂无文章</h1>
     </div>
     <!--  分页  -->
-    <div v-if="filteredArticles.length > 0 && totalPages > 1" class="page">
+    <nav v-if="filteredArticles.length > 0 && totalPages > 1" aria-label="分页导航" class="page">
       <button
         :class="currentPage === 1 ? 'page-btn-disabled' : 'page-btn'"
         :disabled="currentPage === 1"
+        aria-label="上一页"
+        type="button"
         @click="currentPage--"
       >
         上一页
@@ -200,6 +225,7 @@ watch(currentPage, () => {
         :key="index"
         :class="item === currentPage ? 'page-btn-active' : 'page-btn'"
         class="page-btn"
+        type="button"
         @click="currentPage = item"
       >
         {{ item }}
@@ -207,6 +233,8 @@ watch(currentPage, () => {
       <button
         :class="currentPage === totalPages ? 'page-btn-disabled' : 'page-btn'"
         :disabled="currentPage === totalPages"
+        aria-label="下一页"
+        type="button"
         @click="currentPage++"
       >
         下一页
@@ -215,45 +243,97 @@ watch(currentPage, () => {
       <input
         v-if="totalPages > 3"
         v-model="inputPageNum"
+        aria-label="输入页码"
         class="page-input"
         inputmode="numeric"
         placeholder="Go"
         type="text"
         @keyup.enter="changePage"
       />
+    </nav>
+
+    <div v-if="filteredArticles.length > 0" class="result-stats">
+      共 {{ filteredArticles.length }} 篇文章
+      <span v-if="totalPages > 1">，第 {{ currentPage }} / {{ totalPages }} 页</span>
     </div>
   </div>
 </template>
 
 <style scoped>
-.article-list {
-  column-count: 1;
-  column-gap: 0.5rem;
+/* 搜索 */
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
   width: 100%;
-}
-@media (min-width: 576px) {
-  .article-list {
-    column-count: 2;
-  }
-}
-.article-list a {
-  display: block;
-  text-decoration: none;
+  background: var(--off-white);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  border: var(--border);
+  transition: var(--transition);
 }
 
+.search:focus-within {
+  box-shadow: var(--shadow-hover);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--mid-gray);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--dark-gray);
+  font-size: 1rem;
+  padding: 0.25rem;
+}
+
+.search-input::placeholder {
+  color: var(--mid-gray);
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--mid-gray);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1rem;
+  line-height: 1;
+  transition: var(--transition-fast);
+}
+
+.clear-btn:hover {
+  color: var(--dark-gray);
+}
+
+/* 标签栏 */
 .tag-bar {
   width: 100%;
   height: 50px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 12px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
   background-color: var(--off-white);
   box-shadow: var(--shadow);
-  border: 1px solid var(--light-gray);
+  border: var(--border);
   transition: var(--transition);
+}
+
+.tag-bar:hover {
+  box-shadow: var(--shadow-hover);
 }
 
 .tag-bar-info {
@@ -263,91 +343,51 @@ watch(currentPage, () => {
 
 .selected-tag-container {
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
-.selected-tag {
+.selected-tags {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.clear-all-btn {
   height: 32px;
-  background: var(--light-gray);
-  border: 2px solid var(--light-gray);
-  border-radius: 8px;
-  color: var(--dark-gray);
-  font-size: 12px;
-  padding: 0.25rem 0.5rem;
-  font-weight: bold;
-  transition: var(--transition);
-}
-
-.selected-tag:hover {
-  background: var(--mid-gray);
-  cursor: pointer;
-  color: var(--light-gray);
-}
-
-.close-tag-bar {
+  padding-right: 0.5rem;
   background: none;
   border: none;
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
   color: var(--mid-gray);
-  padding: 0 0.2rem;
+  cursor: pointer;
   transition: var(--transition);
 }
 
-.close-tag-bar:hover,
-.clear-btn:hover {
+.clear-all-btn:hover {
   color: var(--dark-gray);
 }
 
-.search {
-  position: relative;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 0.5rem;
+/* 文章列表 */
+.article-list {
+  column-count: 1;
+  column-gap: var(--spacing-sm);
   width: 100%;
-  background: var(--off-white);
-  padding: 0.5rem;
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--light-gray);
-  transition: var(--transition);
+}
+@media (min-width: 640px) {
+  .article-list {
+    column-count: 2;
+  }
 }
 
-.search-input {
-  border: none;
-  outline: none;
-  flex: 1;
-  background: var(--white);
-  border-radius: 8px;
-  padding: 0.5rem 2rem 0.5rem 0.5rem;
-  color: var(--dark-gray);
+.article-list a {
+  display: block;
+  text-decoration: none;
+  break-inside: avoid;
+  margin-bottom: var(--spacing-sm);
 }
 
-.search-input:focus {
-  border: none;
-  outline: none;
-}
-
-.clear-btn {
-  position: absolute;
-  right: 0.5rem;
-  background: none;
-  border: none;
-  line-height: 1;
-  cursor: pointer;
-  color: var(--mid-gray);
-  padding: 0.2rem 0.5rem;
-  transition: var(--transition);
-}
-
+/* 分页 */
 .page {
   display: flex;
   justify-content: center;
@@ -380,8 +420,8 @@ watch(currentPage, () => {
 
 .page-btn-active,
 .page-btn:hover {
-  background: var(--teal);
-  box-shadow: var(--shadow-teal);
+  background: var(--main);
+  box-shadow: var(--shadow-main);
   color: #fff;
 }
 
@@ -394,5 +434,12 @@ watch(currentPage, () => {
   padding: 0.5rem;
   width: 40px;
   text-align: center;
+}
+
+/* 结果统计 */
+.result-stats {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--mid-gray);
 }
 </style>

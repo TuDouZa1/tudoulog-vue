@@ -86,31 +86,33 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="article-page">
+  <article class="article-page">
     <div v-if="article" class="article-card">
-      <div
+      <!-- 封面区域 -->
+      <header
         v-if="article.coverImage"
         :style="`background-image: url(${article.coverImage})`"
         class="cover-wrapper"
       >
-        <img :src="article.coverImage" alt="文章封面图" class="article-cover" />
+        <img :alt="article.title" :src="article.coverImage" class="article-cover" loading="eager" />
         <div class="tags-position">
           <TagComponent :tags="article.tags || []" mode="navigate" @click-tag="goToListWithTag" />
         </div>
         <div class="article-meta">
           <h1 class="article-title">{{ article.title }}</h1>
-          <time class="article-time">{{ article.date }}</time>
+          <time :datetime="article.date" class="article-time">{{ article.date }}</time>
         </div>
-      </div>
-      <div class="article-content">
+      </header>
+      <!-- 文章内容 -->
+      <section class="article-content">
         <div ref="contentRef" class="markdown-body">
           <component :is="article.component" v-if="article.component" />
         </div>
         <TocComponent :headings="headings" />
-      </div>
+      </section>
     </div>
     <BackToTop />
-  </div>
+  </article>
 </template>
 
 <style scoped>
@@ -118,8 +120,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0 0.5rem;
+  gap: var(--spacing-sm);
   max-width: 1200px;
   width: 100%;
 }
@@ -127,40 +128,34 @@ onMounted(async () => {
 .article-card {
   width: 100%;
   background: var(--md-background);
-  border-radius: 12px;
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow);
 }
 
 .cover-wrapper {
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  position: relative;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  position: relative;
   overflow: hidden;
-  border-radius: 8px 8px 0 0;
 }
 
 .cover-wrapper::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-image: inherit; /* 继承父元素的背景图 */
   background-size: cover;
   background-position: center;
-  filter: blur(8px); /* 只模糊背景层 */
+  filter: blur(8px);
   z-index: 0;
 }
 
 .cover-wrapper::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.8) 100%);
   z-index: 2;
 }
@@ -172,37 +167,38 @@ onMounted(async () => {
   max-height: 60vh;
   object-fit: scale-down;
   object-position: center;
-  border-radius: inherit;
   z-index: 1;
 }
 
 .tags-position {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
-  width: 100%;
+  top: var(--spacing);
+  left: var(--spacing);
+  right: var(--spacing);
   z-index: 3;
 }
 
 .article-meta {
   position: absolute;
+  left: 0;
+  right: 0;
   bottom: 0;
-  width: 100%;
-  padding: 0 1rem 1rem;
+  padding: var(--spacing-lg) var(--spacing);
   z-index: 3;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .article-title {
   color: #fff;
-  font-size: 28px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-xs);
+  line-height: 1.3;
 }
 
 .article-time {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
 }
 
 .article-content {
@@ -210,17 +206,31 @@ onMounted(async () => {
   max-width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 1.5rem;
-  box-sizing: border-box;
+  padding: var(--spacing-lg);
+  gap: var(--spacing-lg);
 }
 
 .article-content img {
   width: 100%;
 }
+@media (max-width: 1024px) {
+  .article-content {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .article-title {
+    font-size: 1.25rem;
+  }
+
+  .article-content {
+    padding: var(--spacing);
+  }
+}
 
 .markdown-body {
-  min-width: 0;
+  background: none;
   width: 100%;
-  overflow-x: auto; /* 可选：如果子元素仍溢出，让整个内容区滚动 */
 }
 </style>

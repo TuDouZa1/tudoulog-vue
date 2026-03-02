@@ -8,5 +8,6 @@ const app = createApp(App)
 
 app.use(router)
 
-app.mount('#app')
 app.component('DemoPreview', DemoPreview)
+
+app.mount('#app')

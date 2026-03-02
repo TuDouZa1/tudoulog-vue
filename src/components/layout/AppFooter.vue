@@ -1,7 +1,10 @@
+<script lang="ts" setup></script>
 <template>
-  <div class="footer">
-    <p>- 我是底部 -</p>
-  </div>
+  <footer class="footer">
+    <div class="footer-content">
+      <p>- 土豆博客 -</p>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
@@ -15,6 +18,7 @@
 
 .footer p {
   margin: 0;
-  transition: color 0.3s;
+  font-size: 0.875rem;
+  color: var(--mid-gray);
 }
 </style>

@@ -52,8 +52,26 @@ onUnmounted(() => {
 
 <template>
   <Transition name="fade">
-    <div v-if="visible" class="back-to-top" title="返回顶部" @click="scrollToTop">
-      <span class="arrow">^<br />顶部</span>
+    <div
+      v-if="visible"
+      aria-label="返回顶部"
+      class="back-to-top"
+      title="返回顶部"
+      @click="scrollToTop"
+    >
+      <svg
+        aria-hidden="true"
+        class="arrow-icon"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+      >
+        <path d="M18 15l-6-6-6 6" />
+      </svg>
+      <span class="btn-text">顶部</span>
     </div>
   </Transition>
 </template>
@@ -63,52 +81,58 @@ onUnmounted(() => {
   position: fixed;
   right: 20px;
   bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 48px;
   height: 48px;
   background-color: var(--off-white);
   backdrop-filter: blur(10px);
-  color: white;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  vertical-align: middle;
+  color: var(--dark-gray);
+  border: var(--border);
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow);
   transition: var(--transition);
   z-index: 30;
 }
 
 .back-to-top:hover {
   background-color: var(--light-gray);
+  transform: translateY(-2px);
 }
 
 .back-to-top:active {
-  transform: translateY(6px);
+  transform: translateY(0);
 }
 
 @media (max-width: 800px) {
   .back-to-top {
     right: 20px;
-    bottom: 60px; /* 放在目录按钮上方 */
+    bottom: 50px;
   }
 }
 
-.arrow {
-  color: var(--dark-gray);
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1;
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: var(--transition);
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(20px);
 }
 </style>

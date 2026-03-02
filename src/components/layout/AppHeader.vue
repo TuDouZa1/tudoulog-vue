@@ -20,29 +20,27 @@
 
 <style scoped>
 .header-component {
-  //position: fixed;
-  //top: 0;
-  //left: 50%;
-  //transform: translateX(-50%);
-  //z-index: 100;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-sm);
 }
 
 .header {
-  padding: 0.5rem;
+  padding: var(--spacing-sm);
   background: var(--off-white);
   backdrop-filter: blur(20px);
-  margin: 0.5rem;
-  border-radius: 12px;
+  border-radius: var(--border-radius);
   display: flex;
-  justify-content: space-evenly;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  justify-content: center;
+  box-shadow: var(--shadow);
   border: var(--border);
 }
 
 .nav {
   display: flex;
   justify-content: space-evenly;
-  gap: 10px;
+  gap: var(--spacing-sm);
 }
 
 .nav-item {
@@ -52,21 +50,26 @@
   border: none;
   padding: 0.25rem 1rem;
   text-align: center;
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   transition: var(--transition);
 }
 
 .nav-item:hover {
   cursor: pointer;
-  background: color-mix(in oklch, var(--teal) 80%, white);
+  background: color-mix(in oklch, var(--main) 80%, white);
   color: #fff;
   font-weight: bold;
 }
 
+.nav-item:focus-visible {
+  outline: 2px solid var(--main);
+  outline-offset: 2px;
+}
+
 .nav-item-active {
-  background: var(--teal) !important;
+  background: var(--main) !important;
   color: #fff !important;
-  box-shadow: var(--shadow-teal);
+  box-shadow: var(--shadow-main);
   font-weight: bold;
 }
 </style>

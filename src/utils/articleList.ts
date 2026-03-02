@@ -33,3 +33,14 @@ export const articles = Object.entries(modules)
     }
   })
   .sort((a, b) => b.date.localeCompare(a.date))
+
+/**
+ * 获取所有标签（去重并排序）
+ */
+export function getAllTags(): string[] {
+  const tagSet = new Set<string>()
+  articles.forEach((article) => {
+    article.tags?.forEach((tag) => tagSet.add(tag))
+  })
+  return Array.from(tagSet).sort()
+}

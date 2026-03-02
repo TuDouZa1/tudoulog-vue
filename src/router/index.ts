@@ -45,6 +45,16 @@ const router = createRouter({
       ],
     },
   ],
+  // 滚动行为
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth' }
+    }
+    return { top: 0, behavior: 'smooth' }
+  },
 })
 
 // 全局后置守卫：路由切换完成后修改标题

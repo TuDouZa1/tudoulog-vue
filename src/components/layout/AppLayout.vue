@@ -11,7 +11,7 @@ const isHome = computed(() => route.path === '/')
 
 <template>
   <div class="layout">
-    <AppHeader></AppHeader>
+    <AppHeader />
     <main class="main-content">
       <router-view v-slot="{ Component }">
         <transition appear mode="out-in" name="page">
@@ -19,7 +19,7 @@ const isHome = computed(() => route.path === '/')
         </transition>
       </router-view>
     </main>
-    <AppFooter v-if="!isHome"></AppFooter>
+    <AppFooter v-if="!isHome" />
   </div>
 </template>
 
@@ -32,6 +32,7 @@ const isHome = computed(() => route.path === '/')
 }
 
 .main-content {
+  padding: 0 var(--spacing-sm);
   max-width: 100%;
   flex: 1;
 }

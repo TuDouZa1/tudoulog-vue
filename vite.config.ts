@@ -61,4 +61,16 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  // 构建优化
+  build: {
+    // 代码分割
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // 将 vendor 代码分离
+          vendor: ['vue', 'vue-router'],
+        },
+      },
+    },
+  },
 })

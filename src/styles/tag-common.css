@@ -1,0 +1,52 @@
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.tag,
+.selected-tag {
+  cursor: pointer;
+  background: var(--off-white);
+  border: 2px solid var(--light-gray);
+  border-radius: var(--border-radius-sm);
+  color: var(--dark-gray);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  transition: var(--transition);
+  backdrop-filter: blur(20px);
+  font-family: inherit;
+}
+
+.tag:hover:not(.tag-readonly),
+.tag-active:hover,
+.selected-tag:hover {
+  background: var(--light-gray) !important;
+  border-color: var(--mid-gray) !important;
+  color: var(--dark-gray) !important;
+}
+
+.tag-active,
+.selected-tag {
+  background: var(--mid-gray) !important;
+  border-color: var(--light-gray) !important;
+  color: #fff !important;
+}
+
+/* 组件过渡动画 */
+.tag-readonly {
+  cursor: default;
+  opacity: 0.9;
+}
+
+.tag-enter-active,
+.tag-leave-active {
+  transition: var(--transition-fast);
+}
+
+.tag-enter-from,
+.tag-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}

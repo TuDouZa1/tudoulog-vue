@@ -1,14 +1,47 @@
 <script lang="ts" setup>
+import { inject, type Ref } from 'vue'
+
 const baseUrl = import.meta.env.BASE_URL
+
+// 注入主题
+const { activeTheme, setTheme } = inject('theme') as {
+  activeTheme: Ref<'pink' | 'teal' | 'purple'>
+  setTheme: (theme: 'pink' | 'teal' | 'purple') => void
+}
 </script>
 
 <template>
   <div class="home">
     <section class="hero">
       <transition-group appear class="hero-content" name="list" tag="div">
-        <h1 key="1">土豆仔</h1>
-        <p key="2">这是一个纯静态个人博客</p>
-        <img key="3" :src="`${baseUrl}img/tudouzai.jpeg`" alt="土豆仔" />
+        <h1 key="1" class="hero-title">土豆仔</h1>
+        <p key="2" class="hero-subtitle">这是一个纯静态个人博客</p>
+        <div key="3" class="hero-image-wrapper">
+          <img
+            :src="`${baseUrl}img/tudouzai.jpeg`"
+            alt="土豆仔"
+            class="hero-image"
+            loading="eager"
+          />
+        </div>
+
+        <div key="4" class="theme-picker">
+          <span
+            :class="{ active: activeTheme === 'pink' }"
+            class="color-dot pink"
+            @click="setTheme('pink')"
+          ></span>
+          <span
+            :class="{ active: activeTheme === 'teal' }"
+            class="color-dot teal"
+            @click="setTheme('teal')"
+          ></span>
+          <span
+            :class="{ active: activeTheme === 'purple' }"
+            class="color-dot purple"
+            @click="setTheme('purple')"
+          ></span>
+        </div>
       </transition-group>
     </section>
   </div>
@@ -19,8 +52,97 @@ const baseUrl = import.meta.env.BASE_URL
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  color: var(--dark-gray);
+  gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--mid-gray);
+  margin: 0;
+}
+
+.hero-image-wrapper {
+  position: relative;
+}
+
+.hero-image {
+  margin-top: 1rem;
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
+}
+
+@media screen and (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-image {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+.theme-picker {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: var(--spacing);
+}
+
+.color-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+}
+
+.color-dot.pink {
+  background-color: var(--pink);
+}
+.color-dot.teal {
+  background-color: var(--teal);
+}
+.color-dot.purple {
+  background-color: var(--purple);
+}
+
+.color-dot:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+.color-dot.active {
+  border-color: var(--dark-gray);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-hover);
+}
+
+@media screen and (max-width: 768px) {
+  .color-dot {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 .list-enter-active:nth-child(1) {
@@ -35,35 +157,7 @@ const baseUrl = import.meta.env.BASE_URL
   transition-delay: 0.2s;
 }
 
-.hero-content {
-  padding: 2rem;
-}
-
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  color: var(--dark-gray);
-}
-
-.hero p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: var(--mid-gray);
-}
-
-.hero img {
-  margin-top: 1.5rem;
-  width: 400px;
-  border-radius: 12px;
-  box-shadow:
-    0 4px 8px 0 rgba(0, 0, 0, 0.2),
-    0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-@media screen and (max-width: 600px) {
-  .hero img {
-    width: 300px;
-  }
+.list-enter-active:nth-child(4) {
+  transition-delay: 0.3s;
 }
 </style>
