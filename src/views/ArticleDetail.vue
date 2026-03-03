@@ -206,6 +206,7 @@ onMounted(async () => {
   max-width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   padding: var(--spacing-lg);
   gap: var(--spacing-lg);
 }
@@ -213,24 +214,21 @@ onMounted(async () => {
 .article-content img {
   width: 100%;
 }
-@media (max-width: 1024px) {
-  .article-content {
-    flex-direction: column;
-  }
-}
 
 @media (max-width: 768px) {
+  .article-content {
+    flex-direction: column;
+    padding: var(--spacing);
+  }
   .article-title {
     font-size: 1.25rem;
-  }
-
-  .article-content {
-    padding: var(--spacing);
   }
 }
 
 .markdown-body {
   background: none;
   width: 100%;
+  min-width: 0;
+  flex-shrink: 1;
 }
 </style>

@@ -154,7 +154,6 @@ export const articles = Object.entries(modules)
     }
   })
   .sort((a, b) => b.date.localeCompare(a.date))
-
 ```
 
 #### 2.3 articlePage.vue
@@ -175,8 +174,6 @@ import { computed, defineAsyncComponent, onMounted } from 'vue'
 import { type Article, articles } from '@/utils/articleList'
 
 import 'github-markdown-css'
-import 'prismjs/themes/prism-okaidia.css'
-import '@/styles/article-common.css'
 
 const route = useRoute()
 const articleId = route.params.id as string

@@ -374,7 +374,7 @@ watch(currentPage, () => {
   column-gap: var(--spacing-sm);
   width: 100%;
 }
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .article-list {
     column-count: 2;
   }

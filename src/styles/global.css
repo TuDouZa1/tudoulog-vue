@@ -6,15 +6,15 @@
   --mid-gray: oklch(70% 0.02 0); /* 中灰，用于次要文字 */
   --dark-gray: oklch(25% 0.02 0); /* 深灰，用于正文 */
 
-  /* 强调色 - 高色度，三种色相，亮度统一在 65%~70% 之间保证鲜艳 */
-  --pink: oklch(70% 0.22 10); /* 粉红，类似 rgba(255,100,100) */
-  --teal: oklch(75% 0.18 170); /* 青绿，类似 rgba(100,255,200) */
-  --purple: oklch(65% 0.2 290); /* 紫，类似 rgba(200,100,255) */
+  /* 主色 - 感知均匀的高亮度五色板 */
+  --teal: oklch(75% 0.18 170);
+  --pink: oklch(75% 0.17 20);
+  --purple: oklch(70% 0.16 290);
 
-  /* 辅助强调色 - 降低色度或亮度，用于 hover 等状态 */
-  --pink-light: oklch(80% 0.15 10);
+  /* 浅色 - 用于 hover 等状态 */
   --teal-light: oklch(85% 0.12 170);
-  --purple-light: oklch(75% 0.15 290);
+  --pink-light: oklch(85% 0.11 20);
+  --purple-light: oklch(80% 0.10 290);
 
   /* 主色 */
   --main: var(--teal);
@@ -22,9 +22,6 @@
 
   /* 文章详情页 */
   --md-background: oklch(100% 0 0);
-  --error: oklch(60% 0.2 25);
-  --success: oklch(65% 0.18 145);
-  --warning: oklch(75% 0.15 85);
 
   /* 阴影 */
   --shadow: 0 4px 8px rgba(0, 0, 0, 0.04),
@@ -56,7 +53,14 @@
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
 
+  /* 屏幕宽度 */
+  --width: 1200px;
+  --width-sm: 768px;
+
   --delay: 0s;
+  --bg-pos-x: 0;
+  --bg-pos-y: 0;
+  --bg-image: ;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -90,6 +94,7 @@ body {
   line-height: 1.7;
   position: relative;
   overflow-x: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 body::before {

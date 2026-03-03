@@ -107,7 +107,7 @@ onUnmounted(() => {
   transform: translateY(0);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 768px) {
   .back-to-top {
     right: 20px;
     bottom: 50px;

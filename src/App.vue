@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, provide, ref } from 'vue'
+import { DEFAULT_THEME, type Theme, THEMES } from '@/constants/theme.ts'
 
-type Theme = 'pink' | 'teal' | 'purple'
-const activeTheme = ref<Theme>('teal')
+const activeTheme = ref<Theme>(DEFAULT_THEME)
 
 // 应用主题的函数
 const applyTheme = (theme: Theme) => {
@@ -22,10 +22,10 @@ provide('theme', {
 // 初始化
 onMounted(() => {
   const saved = localStorage.getItem('theme') as Theme | null
-  if (saved && ['pink', 'teal', 'purple'].includes(saved)) {
+  if (saved && THEMES.includes(saved)) {
     applyTheme(saved)
   } else {
-    applyTheme('teal') // 默认并存入 localStorage
+    applyTheme(DEFAULT_THEME) // 默认并存入 localStorage
   }
 })
 </script>

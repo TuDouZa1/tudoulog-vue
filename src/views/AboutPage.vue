@@ -306,7 +306,7 @@ const socialLinks = [
   font-size: 0.875rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .about-card {
     padding: var(--spacing);
   }

@@ -88,11 +88,11 @@ const handleClick = (id: string) => {
 // 目录和按钮显示
 // 手动切换状态（窄屏下有效）
 const isTocVisible = ref(false)
-// 当前是否为宽屏（>=1250px）
-const isWideScreen = ref(window.matchMedia('(min-width: 1250px)').matches)
 
 // 监听屏幕宽度变化
-const mediaQuery = window.matchMedia('(min-width: 1250px)')
+const mediaQuery = window.matchMedia('(min-width: 768px)')
+// 当前是否为宽屏（>=768px）
+const isWideScreen = ref(mediaQuery.matches)
 const handleMediaChange = (e: MediaQueryListEvent) => {
   isWideScreen.value = e.matches
 }
@@ -185,7 +185,7 @@ const toggleToc = () => {
 .show-toc-btn:active {
   transform: translateY(10px);
 }
-@media (min-width: 1250px) {
+@media (min-width: 768px) {
   .show-toc-btn {
     display: none;
   }
@@ -194,9 +194,9 @@ const toggleToc = () => {
 .toc {
   position: sticky;
   top: 10px;
-  max-height: calc(100vh - 120px);
-  width: 300px;
-  align-self: flex-start;
+  max-height: 100vh;
+  width: 280px;
+  flex-shrink: 0;
   background: var(--md-background);
   padding: 1rem;
   overflow-y: auto;
@@ -234,7 +234,7 @@ const toggleToc = () => {
   z-index: 5;
 }
 
-@media (width < 800px) {
+@media (width < 768px) {
   .toc {
     width: 100%;
     max-height: 50%;

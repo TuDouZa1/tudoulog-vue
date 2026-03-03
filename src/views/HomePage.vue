@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { inject, type Ref } from 'vue'
+import { type Theme, THEMES } from '@/constants/theme.ts'
 
 const baseUrl = import.meta.env.BASE_URL
 
 // 注入主题
 const { activeTheme, setTheme } = inject('theme') as {
-  activeTheme: Ref<'pink' | 'teal' | 'purple'>
-  setTheme: (theme: 'pink' | 'teal' | 'purple') => void
+  activeTheme: Ref<Theme>
+  setTheme: (theme: Theme) => void
 }
 </script>
 
@@ -27,20 +28,12 @@ const { activeTheme, setTheme } = inject('theme') as {
 
         <div key="4" class="theme-picker">
           <span
-            :class="{ active: activeTheme === 'pink' }"
-            class="color-dot pink"
-            @click="setTheme('pink')"
-          ></span>
-          <span
-            :class="{ active: activeTheme === 'teal' }"
-            class="color-dot teal"
-            @click="setTheme('teal')"
-          ></span>
-          <span
-            :class="{ active: activeTheme === 'purple' }"
-            class="color-dot purple"
-            @click="setTheme('purple')"
-          ></span>
+            v-for="theme in THEMES"
+            :key="theme"
+            :class="[theme, { active: activeTheme === theme }]"
+            class="color-dot"
+            @click="setTheme(theme)"
+          />
         </div>
       </transition-group>
     </section>
@@ -126,7 +119,6 @@ const { activeTheme, setTheme } = inject('theme') as {
 .color-dot.purple {
   background-color: var(--purple);
 }
-
 .color-dot:hover {
   transform: scale(1.1);
   box-shadow: var(--shadow-lg);
