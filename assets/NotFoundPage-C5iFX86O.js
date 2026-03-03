@@ -1,0 +1,1 @@
+import{_ as n}from"./index-DcXgpvrs.js";import{a as e,c as s,g as o}from"./vendor-B4-hkJEQ.js";const c={},a={class:"not-found"};function r(d,t){return e(),s("section",a,[...t[0]||(t[0]=[o("div",{class:"not-found-content"},[o("h1",null,"404 NotFound"),o("p",null,"空空如也")],-1)])])}const f=n(c,[["render",r],["__scopeId","data-v-b6315509"]]);export{f as default};
