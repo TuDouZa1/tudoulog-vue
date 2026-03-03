@@ -18,7 +18,12 @@ const { activeTheme, setTheme } = inject('theme') as {
         <h1 key="1" class="hero-title">土豆仔</h1>
         <p key="2" class="hero-subtitle">这是一个纯静态个人博客</p>
         <div key="3" class="hero-image-wrapper">
-          <img :src="`${baseUrl}img/tudou.png`" alt="土豆仔" class="hero-image" loading="eager" />
+          <img
+            :src="`${baseUrl}img/tudouzai.jpeg`"
+            alt="土豆仔"
+            class="hero-image"
+            loading="eager"
+          />
         </div>
 
         <div key="4" class="theme-picker">
