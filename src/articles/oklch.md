@@ -3,7 +3,7 @@ title: 'OKLCH色彩'
 date: '2026-03-01'
 tags: [ '编程', '前端', 'UI' ]
 excerpt: 'oklch() 基于 Oklab 色彩空间，是 CSS 颜色表示的重大进步，它让颜色的亮度、色度、色相在感知上解耦，极大简化了动态配色、渐变生成和暗色主题的实现。'
-coverImage: 'oklch_cover.png'
+coverImage: 'oklch.png'
 ---
 
 ## 资源推荐
@@ -46,3 +46,5 @@ A（透明度）：可选，0 ~ 1 或百分比，默认为 1。
 </div>
 </template>
 </DemoPreview>
+
+其实我也不会这个配色，等我学会了继续写

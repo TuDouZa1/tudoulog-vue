@@ -198,7 +198,7 @@ const toggleToc = () => {
   width: 280px;
   flex-shrink: 0;
   background: var(--md-background);
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   overflow-y: auto;
   z-index: 10;
 }

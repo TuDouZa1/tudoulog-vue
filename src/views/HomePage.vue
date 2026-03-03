@@ -18,12 +18,7 @@ const { activeTheme, setTheme } = inject('theme') as {
         <h1 key="1" class="hero-title">土豆仔</h1>
         <p key="2" class="hero-subtitle">这是一个纯静态个人博客</p>
         <div key="3" class="hero-image-wrapper">
-          <img
-            :src="`${baseUrl}img/tudouzai.jpeg`"
-            alt="土豆仔"
-            class="hero-image"
-            loading="eager"
-          />
+          <img :src="`${baseUrl}img/tudou.png`" alt="土豆仔" class="hero-image" loading="eager" />
         </div>
 
         <div key="4" class="theme-picker">
@@ -52,7 +47,7 @@ const { activeTheme, setTheme } = inject('theme') as {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-lg);
   padding: var(--spacing-xl);
 }
 
@@ -88,8 +83,8 @@ const { activeTheme, setTheme } = inject('theme') as {
   }
 
   .hero-image {
-    width: 280px;
-    height: 280px;
+    width: 250px;
+    height: 250px;
   }
 }
 

@@ -58,9 +58,6 @@
   --width-sm: 768px;
 
   --delay: 0s;
-  --bg-pos-x: 0;
-  --bg-pos-y: 0;
-  --bg-image: ;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -107,7 +104,7 @@ body::before {
   animation: shiftColors 10s infinite alternate ease-in-out;
   will-change: filter, opacity;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.4;
   z-index: -1;
 }
 

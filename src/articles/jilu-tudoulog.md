@@ -1,8 +1,8 @@
 ---
-title: '记录写土豆博客学到的东西'
-date: '2026-03-01'
-tags: [ '编程', 'Vue', '前端' ]
-excerpt: '记录写博客项目时学到的东西，包括markdown转vue组件，文章目录导航组件，组件过渡动画等等'
+title: '记录写土豆博客学到的东西TS篇'
+date: '2026-03-03'
+tags: [ '编程', 'Vue', '前端', 'TypeScript' ]
+excerpt: '写博客的时候是边问ai边写的，所以打算记录一下写博客项目时学到的东西，包括markdown转vue组件，文章目录导航组件，组件过渡动画等等'
 coverImage: 'jilu-tudoulog.jpg'
 ---
 
@@ -219,7 +219,6 @@ const article = computed(() => articles.find((a) => a.id === articleId))
 ### 3. 示例
 
 ```html
-
 <router-view v-slot="{ Component }">
   <transition appear mode="out-in" name="page">
     <!--  :key="$route.fullPath" 强制同一组件不同参数时也触发过渡（因为组件被复用）  -->
@@ -289,24 +288,42 @@ function slugify(text: string): string {
 }
 
 onMounted(async () => {
+  if (article.value) {
+    // 设置标题为文章标题
+    document.title = article.value.title + '-土豆博客'
+  }
+
   // 等待 DOM 更新，确保文章已渲染完毕
   await nextTick()
 
   if (!contentRef.value) return
 
-  // 获取所有h2 h3标签
+  // 获取所有h2 h3元素
   const elements = contentRef.value.querySelectorAll('h2, h3')
-  // 标题数组
+  // 导航集合
   const items: Heading[] = []
+  // 记录每个基础 slug 的出现次数，用来处理标题名相同的情况
+  const slugCount = new Map<string, number>()
 
-  // 遍历所有h2 h3标签，设置id，title，level属性放入items中
+  // 遍历所有h2 h3元素，设置id，title，level属性放入items中
   elements.forEach((element) => {
     const level = element.tagName === 'H2' ? 2 : 3
 
-    // 设置id方便后续根据id页面跳转
     let id = element.id
     if (!id) {
-      id = slugify(element.textContent || 'heading')
+      const rawText = element.textContent || 'heading'
+      let baseSlug = slugify(rawText)
+      // 如果 baseSlug 为空（例如只有特殊字符），赋值为默认值
+      if (!baseSlug) baseSlug = 'heading'
+      const count = slugCount.get(baseSlug) || 0
+      if (count === 0) {
+        id = baseSlug
+      } else {
+        id = `${baseSlug}-${count}`
+      }
+      // 更新计数器
+      slugCount.set(baseSlug, count + 1)
+      // 将生成的 id 赋给元素
       element.id = id
     }
     items.push({
@@ -355,7 +372,6 @@ defineEmits<{
 ```
 
 ```html
-
 <li>
   <!-- h2目录导航链接 -->
   <a
@@ -470,18 +486,27 @@ const handleClick = (id: string) => {
 ```
 
 ```html
-
-<aside v-if="headings.length" class="toc">
-  <div class="toc-title">目录导航</div>
-  <ul class="toc-list">
-    <TocItem
-      v-for="heading in headings"
-      :key="heading.id"
-      :active-id="activeId"
-      :heading="heading"
-      @click="handleClick"
-    />
-  </ul>
+<aside
+  v-if="headings.length"
+  v-show="shouldShowToc"
+  id="toc-panel"
+  aria-label="文章目录"
+  class="toc"
+>
+  <div class="toc-header">
+    <h3 class="toc-title">目录导航</h3>
+  </div>
+  <nav class="toc-nav">
+    <ul class="toc-list">
+      <TocItem
+        v-for="heading in headings"
+        :key="heading.id"
+        :active-id="activeId"
+        :heading="heading"
+        @click="handleClick"
+      />
+    </ul>
+  </nav>
 </aside>
 ```
 
@@ -491,13 +516,13 @@ const handleClick = (id: string) => {
 在窄屏下显示目录按钮并默认隐藏目录导航栏，通过按钮点击切换显示
 
 ```ts
-// 手动按钮切换状态（窄屏下有效）
+// 手动切换状态（窄屏下有效）
 const isTocVisible = ref(false)
-// 当前是否为宽屏（>=1250px）
-const mediaQuery = window.matchMedia('(min-width: 1250px)')
-const isWideScreen = ref(mediaQuery.matches)
 
 // 监听屏幕宽度变化
+const mediaQuery = window.matchMedia('(min-width: 768px)')
+// 当前是否为宽屏（>=768px）
+const isWideScreen = ref(mediaQuery.matches)
 const handleMediaChange = (e: MediaQueryListEvent) => {
   isWideScreen.value = e.matches
 }
@@ -509,7 +534,7 @@ onUnmounted(() => {
   mediaQuery.removeEventListener('change', handleMediaChange)
 })
 
-// 最终显示状态：宽屏始终显示，窄屏由手动按钮切换
+// 最终显示状态：宽屏始终显示，窄屏由手动切换决定
 const shouldShowToc = computed(() => {
   return isWideScreen.value || isTocVisible.value
 })
@@ -521,20 +546,221 @@ const toggleToc = () => {
 ```
 
 ```html
+<!-- 窄屏按钮 -->
+<button
+  v-if="headings.length"
+  :aria-expanded="isTocVisible"
+  aria-controls="toc-panel"
+  class="show-toc-btn"
+  type="button"
+  @click="toggleToc"
+>
+  <span class="btn-text">{{ isTocVisible ? '收起' : '目录' }}</span>
+</button>
 
-<div class="show-toc-btn" @click="toggleToc">{{ isTocVisible ? '收起' : '目录' }}</div>
-<transition name="fade">
-  <aside v-if="headings.length" v-show="shouldShowToc" class="toc">
-    <div class="toc-title">目录导航</div>
-    <ul class="toc-list">
-      <TocItem
-        v-for="heading in headings"
-        :key="heading.id"
-        :active-id="activeId"
-        :heading="heading"
-        @click="handleClick"
-      />
-    </ul>
-  </aside>
+<!-- 目录导航 -->
+
+<!-- 遮罩层（窄屏） -->
+<transition name="toc-slide">
+  <div
+    v-if="!isWideScreen && isTocVisible"
+    class="toc-overlay"
+    @click="isTocVisible = !isTocVisible"
+  />
 </transition>
 ```
+
+## 标签组件
+
+### 1. 定义标签常量
+
+文章列表页的标签可选中用于过滤筛选，文章详情页的标签点击跳转
+
+```ts
+/** 模式：select=可选中(默认)，navigate=点击跳转，readonly=只读 */
+export const TAG_MODE = ['select', 'navigate', 'readonly']
+export type TagMode = (typeof TAG_MODE)[number]
+export const TAG_MODE_DEFAULT = TAG_MODE[0]
+```
+
+### 2. 编写标签组件
+
+#### ts
+
+```ts
+// 接收标签数组，标签模式和选中的标签数组
+// withDefaults 为可选 prop 设置默认值
+const props = withDefaults(
+  defineProps<{ tags: string[]; modelValue?: string[]; mode?: TagMode }>(),
+  {
+    mode: TAG_MODE_DEFAULT,
+    modelValue: () => [],
+  },
+)
+// 发送更新后的选中标签数组，发送被点击的标签用于跳转
+const emit = defineEmits<{
+  (e: 'update:modelValue', tags: string[]): void
+  (e: 'clickTag', tags: string): void
+}>()
+
+const isSelectMode = computed(() => props.mode === TAG_MODE[0])
+const isNavigateMode = computed(() => props.mode === TAG_MODE[1])
+const isReadonlyMode = computed(() => props.mode === TAG_MODE[2])
+
+const isSelected = (tag: string) => props.modelValue?.includes(tag)
+
+// 标签点击
+const handleTagClick = (tag: string) => {
+  if (isReadonlyMode.value) return
+  if (isSelectMode.value) {
+    // 当前选中标签数组
+    const currentTags = props.modelValue ? [...props.modelValue] : []
+    const index = currentTags.indexOf(tag)
+    if (index === -1) {
+      currentTags.push(tag)
+    } else {
+      currentTags.splice(index, 1)
+    }
+    emit('update:modelValue', currentTags)
+  } else if (isNavigateMode.value) {
+    emit('clickTag', tag)
+  }
+}
+```
+
+#### vue
+
+```html
+<div aria-label="标签列表" class="tags" role="list">
+  <button
+    v-for="tag in tags"
+    :key="tag"
+    :aria-checked="isSelectMode ? isSelected(tag) : undefined"
+    :class="[
+        'tag',
+        { 'tag-active': isSelectMode && isSelected(tag) },
+        { 'tag-readonly': isReadonlyMode },
+      ]"
+    :role="isSelectMode ? 'checkbox' : 'button'"
+    type="button"
+    @click.stop.prevent="handleTagClick(tag)"
+  >
+    {{ tag }}
+  </button>
+</div>
+```
+
+### 3. 使用示例
+
+选中模式
+
+```html
+<TagComponent v-model="selectedTags" :tags="article.tags || []" />
+```
+
+跳转模式
+
+```html
+<TagComponent
+  :mode="TAG_MODE[1]"
+  :tags="article.tags || []"
+  @click-tag="goToListWithTag"
+/>
+```
+
+## 修改CSS主题色
+
+就像首页那样
+
+### 1. 编写CSS主题色变量
+
+```css
+/* 主色 - 感知均匀的高亮度五色板 */
+--teal: oklch(75% 0.18 170);
+--pink: oklch(75% 0.17 20);
+--purple: oklch(70% 0.16 290);
+
+/* 浅色 - 用于 hover 等状态 */
+--teal-light: oklch(85% 0.12 170);
+--pink-light: oklch(85% 0.11 20);
+--purple-light: oklch(80% 0.10 290);
+
+/* 主色 */
+--main: var(--teal);
+--main-light: var(--teal-light);
+```
+
+### 2. 定义主题色常量
+
+```ts
+export const THEMES = ['teal', 'pink', 'purple'] as const
+export type Theme = (typeof THEMES)[number]
+export const DEFAULT_THEME: Theme = THEMES[0]
+```
+
+### 3. 在App.vue中添加主题色修改逻辑
+
+因为`App.vue`是整个vue的根组件，是必须加载的，所以不会因为页面切换后再刷新导致主题色失效
+
+```ts
+import { onMounted, provide, ref } from 'vue'
+import { DEFAULT_THEME, type Theme, THEMES } from '@/constants/theme.ts'
+
+// 当前使用的主题色
+const activeTheme = ref<Theme>(DEFAULT_THEME)
+
+// 应用主题色
+const applyTheme = (theme: Theme) => {
+  const root = document.documentElement
+  root.style.setProperty('--main', `var(--${theme})`)
+  root.style.setProperty('--main-light', `var(--${theme}-light)`)
+  // 存储在localStorage
+  localStorage.setItem('theme', theme)
+  activeTheme.value = theme
+}
+
+// 通过provide发送给子组件当前使用的主题色以及应用主题色函数
+provide('theme', {
+  activeTheme,
+  setTheme: applyTheme,
+})
+
+// 初始化
+onMounted(() => {
+  const saved = localStorage.getItem('theme') as Theme | null
+  if (saved && THEMES.includes(saved)) {
+    applyTheme(saved)
+  } else {
+    applyTheme(DEFAULT_THEME) // 默认并存入 localStorage
+  }
+})
+```
+
+### 4. 修改颜色组件
+
+```ts
+import { inject, type Ref } from 'vue'
+import { type Theme, THEMES } from '@/constants/theme.ts'
+
+// 通过inject获取当前主题色以及应用主题色函数
+const { activeTheme, setTheme } = inject('theme') as {
+  activeTheme: Ref<Theme>
+  setTheme: (theme: Theme) => void
+}
+```
+
+```html
+<span
+  v-for="theme in THEMES"
+  :class="[theme, { active: activeTheme === theme }]"
+  class="color-dot"
+  @click="setTheme(theme)"
+/>
+```
+
+### 5. 扩展：provide / inject 和defineProps / defineEmits之间的区别
+
+* 前者可以跨越任意层级，无需逐层传递，后者仅限父子组件
+* provide / inject对传递的值没有类型限制，所以也可以传递函数
+
+所以总结一下就是父子组件用defineProps，不是父子组件就用provide，有pinia也可以用pinia，需求简单且少的时候可以先用provide

@@ -9,6 +9,7 @@ import '@/styles/article-common.css'
 import TocComponent from '@/components/TocComponent.vue'
 import BackToTop from '@/components/BackToTop.vue'
 import TagComponent from '@/components/TagComponent.vue'
+import { TAG_MODE } from '@/constants/tagMode.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -47,6 +48,8 @@ onMounted(async () => {
   const elements = contentRef.value.querySelectorAll('h2, h3')
   // 导航集合
   const items: Heading[] = []
+  // 记录每个基础 slug 的出现次数，用来处理标题名相同的情况
+  const slugCount = new Map<string, number>()
 
   // 遍历所有h2 h3元素，设置id，title，level属性放入items中
   elements.forEach((element) => {
@@ -54,7 +57,19 @@ onMounted(async () => {
 
     let id = element.id
     if (!id) {
-      id = slugify(element.textContent || 'heading')
+      const rawText = element.textContent || 'heading'
+      let baseSlug = slugify(rawText)
+      // 如果 baseSlug 为空（例如只有特殊字符），赋值为默认值
+      if (!baseSlug) baseSlug = 'heading'
+      const count = slugCount.get(baseSlug) || 0
+      if (count === 0) {
+        id = baseSlug
+      } else {
+        id = `${baseSlug}-${count}`
+      }
+      // 更新计数器
+      slugCount.set(baseSlug, count + 1)
+      // 将生成的 id 赋给元素
       element.id = id
     }
     items.push({
@@ -96,13 +111,20 @@ onMounted(async () => {
       >
         <img :alt="article.title" :src="article.coverImage" class="article-cover" loading="eager" />
         <div class="tags-position">
-          <TagComponent :tags="article.tags || []" mode="navigate" @click-tag="goToListWithTag" />
+          <TagComponent
+            :mode="TAG_MODE[1]"
+            :tags="article.tags || []"
+            @click-tag="goToListWithTag"
+          />
         </div>
         <div class="article-meta">
           <h1 class="article-title">{{ article.title }}</h1>
           <time :datetime="article.date" class="article-time">{{ article.date }}</time>
         </div>
       </header>
+
+      <div v-if="article.excerpt" class="article-excerpt">{{ article.excerpt }}</div>
+
       <!-- 文章内容 -->
       <section class="article-content">
         <div ref="contentRef" class="markdown-body">
@@ -201,6 +223,12 @@ onMounted(async () => {
   font-size: 0.875rem;
 }
 
+.article-excerpt {
+  width: 100%;
+  padding: var(--spacing-lg);
+  background: var(--off-white);
+  color: var(--dark-gray);
+}
 .article-content {
   width: 100%;
   max-width: 100%;

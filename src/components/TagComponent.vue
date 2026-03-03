@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import '@/styles/tag-common.css'
+import { TAG_MODE, TAG_MODE_DEFAULT, type TagMode } from '@/constants/tagMode.ts'
 
-/** 模式：select=可选中，navigate=点击跳转，readonly=只读 */
-type TagMode = 'select' | 'navigate' | 'readonly'
-
+// withDefaults 为可选 prop 设置默认值
 const props = withDefaults(
   defineProps<{ tags: string[]; modelValue?: string[]; mode?: TagMode }>(),
   {
-    mode: 'select',
+    mode: TAG_MODE_DEFAULT,
     modelValue: () => [],
   },
 )
@@ -17,9 +16,9 @@ const emit = defineEmits<{
   (e: 'clickTag', tags: string): void
 }>()
 
-const isSelectMode = computed(() => props.mode === 'select')
-const isNavigateMode = computed(() => props.mode === 'navigate')
-const isReadonlyMode = computed(() => props.mode === 'readonly')
+const isSelectMode = computed(() => props.mode === TAG_MODE[0])
+const isNavigateMode = computed(() => props.mode === TAG_MODE[1])
+const isReadonlyMode = computed(() => props.mode === TAG_MODE[2])
 
 const isSelected = (tag: string) => props.modelValue?.includes(tag)
 

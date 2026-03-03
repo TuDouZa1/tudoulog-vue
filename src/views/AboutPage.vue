@@ -1,59 +1,4 @@
 <script lang="ts" setup>
-interface SoftwareItem {
-  name: string
-  description: string
-  link?: string
-}
-
-interface SoftwareCategory {
-  title: string
-  items: SoftwareItem[]
-}
-
-const toolSoftware: SoftwareCategory = {
-  title: '工具软件',
-  items: [
-    { name: 'OBS Studio', description: '录屏直播的开源软件，大家都在用' },
-    {
-      name: 'SteamCommunity302',
-      description: '不需要加速器，修改host访问Steam和被墙网站的工具',
-      link: 'https://www.dogfight360.com/blog/18682/',
-    },
-    { name: '傲梅分区助手', description: '管理磁盘简单好用' },
-    { name: 'Motrix', description: '下载工具（Electron框架，内存占用较大）' },
-    { name: 'Everything', description: '本地文件搜索索引神器，找文件速度很快' },
-    { name: 'WizTree', description: '可视化磁盘占用分析，清理垃圾用' },
-    { name: 'PDFgear', description: 'PDF转各种格式' },
-    { name: '图吧工具箱', description: '工具合集' },
-    { name: 'HiBit Uninstall', description: '卸载工具，能清理卸载残留文件注册表' },
-    {
-      name: 'Mpv.Net',
-      description: '本地播放器，开箱即用',
-      link: 'https://www.lckp.top/thing/mpvnet_cm/',
-    },
-    { name: 'PixPin', description: '截图软件' },
-    { name: 'UU远程', description: '开箱即用免费远程控制软件' },
-  ],
-}
-
-const devSoftware: SoftwareCategory = {
-  title: '开发软件',
-  items: [
-    {
-      name: 'glogg',
-      description: '看大型日志加载搜索速度快',
-      link: 'https://glogg.bonnefon.org/',
-    },
-    { name: 'Tiny RDM', description: '可视化Redis管理工具' },
-    { name: 'WinSCP', description: 'Windows的远程服务器文件传输管理工具' },
-    { name: 'IShellPro', description: '专注于SSH的终端工具，多平台原生性能好' },
-    { name: 'IDEA', description: 'JetBrains旗舰IDE，无需多言' },
-    { name: 'WebStorm', description: '前端开发IDE，功能强大' },
-    { name: 'VS Code', description: '轻量级IDE，需要各种插件实现功能' },
-    { name: 'Sublime Text', description: '高级记事本，编辑配置文件用，内存占用非常低' },
-  ],
-}
-
 const socialLinks = [
   {
     name: 'GitHub',
@@ -76,7 +21,7 @@ const socialLinks = [
         <span class="cool-title">关于土豆博客</span>
       </h2>
       <div class="about-content">
-        <p class="intro">一个使用 Vue 3 + TypeScript + Vite 构建的纯静态个人博客项目</p>
+        <p class="intro">一个纯静态个人博客项目</p>
 
         <div class="info-grid">
           <div class="info-item">
@@ -115,36 +60,34 @@ const socialLinks = [
       </div>
     </section>
 
-    <!-- 软件列表 -->
-    <section key="2" aria-labelledby="software-title" class="about-card">
-      <h2 id="software-title" class="about-title">
-        <span class="cool-title">软件列表</span>
+    <section key="2" aria-labelledby="about-title" class="about-card">
+      <h2 id="about-title" class="about-title">
+        <span class="cool-title">关于土豆仔</span>
       </h2>
-      <p class="section-desc">记录一些好用的软件列表</p>
-      <div class="software-sections">
-        <div
-          v-for="category in [toolSoftware, devSoftware]"
-          :key="category.title"
-          class="software-category"
-        >
-          <h3 class="category-title">{{ category.title }}</h3>
-          <ul class="software-list">
-            <li v-for="item in category.items" :key="item.name" class="software-item">
-              <span class="software-name">
-                <a
-                  v-if="item.link"
-                  :href="item.link"
-                  class="software-link"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {{ item.name }}
-                </a>
-                <template v-else>{{ item.name }}</template>
-              </span>
-              <span class="software-desc">{{ item.description }}</span>
-            </li>
-          </ul>
+      <div class="about-content">
+        <p class="intro">当时玩邮差骑士的随机名字是土豆仔，所以网名就叫土豆仔了</p>
+      </div>
+    </section>
+
+    <section key="3" aria-labelledby="about-title" class="about-card">
+      <h2 id="about-title" class="about-title">
+        <span class="cool-title">关于资源</span>
+      </h2>
+      <div class="about-content">
+        <p class="intro">网页肯定要图标，所以随便找了个土豆图标🥔</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">图标资源</span>
+            <a
+              class="info-link"
+              href="https://www.flaticon.com/free-icons/potato"
+              rel="noopener noreferrer"
+              target="_blank"
+              title="potato icons"
+            >
+              Potato icons created by Freepik - Flaticon
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -251,69 +194,9 @@ const socialLinks = [
   height: 1.25rem;
 }
 
-.section-desc {
-  color: var(--mid-gray);
-  margin: calc(-1 * var(--spacing-sm)) 0 var(--spacing) 0;
-}
-
-.software-sections {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.category-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--dark-gray);
-  margin: 0 0 var(--spacing-sm) 0;
-  padding-bottom: var(--spacing-xs);
-  border-bottom: 2px solid var(--main);
-  display: inline-block;
-}
-
-.software-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.software-item {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs) var(--spacing-sm);
-  align-items: baseline;
-}
-
-.software-name {
-  font-weight: 600;
-  color: var(--dark-gray);
-}
-
-.software-link {
-  color: var(--main);
-}
-
-.software-link:hover {
-  text-decoration: underline;
-}
-
-.software-desc {
-  color: var(--mid-gray);
-  font-size: 0.875rem;
-}
-
 @media (max-width: 768px) {
   .about-card {
     padding: var(--spacing);
-  }
-
-  .software-item {
-    flex-direction: column;
-    gap: 0;
   }
 }
 
@@ -323,5 +206,9 @@ const socialLinks = [
 
 .list-enter-active:nth-child(2) {
   transition-delay: 0.1s;
+}
+
+.list-enter-active:nth-child(3) {
+  transition-delay: 0.2s;
 }
 </style>

@@ -21,7 +21,7 @@ const modules: Record<string, MarkdownModule> = import.meta.glob('@/articles/*.m
 export const articles = Object.entries(modules)
   .map(([path, mod]) => {
     const id = path.split('/').pop()!.replace('.md', '')
-    const imgPath = baseUrl + 'img/'
+    const imgPath = baseUrl + 'img/cover/'
     return {
       id,
       title: mod.title || id,
